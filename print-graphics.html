@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Graphics | Julia Lukasik</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: #f1efff;
+      overflow-x: hidden;
+      padding-top: 76px;
+      background: #090610;
+      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-60%25' y='-60%25' width='220%25' height='220%25'><feGaussianBlur in='SourceGraphic' stdDeviation='1.2' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='2.2' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='3.8' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><polygon points='20,3 23.5,15 36,15 26,22.5 29.5,35 20,27.5 10.5,35 14,22.5 4,15 16.5,15' fill='url(%23g)'/></g></svg>") 20 20, auto;
+    }
+
+    html.embed-mode,
+    html.embed-mode body {
+      background: transparent;
+    }
+
+    body.embed-mode {
+      padding-top: 0;
+      background: transparent;
+    }
+
+    body.embed-mode .taskbar {
+      display: none;
+    }
+
+    body.embed-mode .content {
+      width: min(1160px, 100%);
+      padding: 1.8rem 1.4rem 3rem;
+    }
+
+    body.embed-mode .hero-title {
+      display: none;
+    }
+
+    body.embed-mode #galaxyCanvas {
+      display: none;
+    }
+
+    body.embed-mode .hero-top {
+      display: none;
+    }
+
+    body.embed-mode .hero-bottom {
+      font-size: clamp(30px, 4.4vw, 54px);
+      letter-spacing: 0.02em;
+      text-transform: none;
+      font-weight: 700;
+      text-shadow:
+        0 0 8px rgba(255,255,255,0.28),
+        0 0 16px rgba(168,85,247,0.2);
+    }
+
+    body.embed-mode .intro {
+      text-align: left;
+      font-size: 1rem;
+      line-height: 1.72;
+      margin: 0 0 1.5rem;
+      max-width: 980px;
+    }
+
+    body.embed-mode .photo-strip {
+      padding-top: 0.6rem;
+    }
+
+    #galaxyCanvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .taskbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 34px;
+      padding: 18px 10px;
+      z-index: 999;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        120deg,
+        rgba(20,18,32,0.62),
+        rgba(28,24,44,0.56),
+        rgba(36,28,56,0.52),
+        rgba(42,30,56,0.5)
+      );
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .taskbar a,
+    .taskbar-dropdown-trigger {
+      font-family: Inter, sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 400% 400%;
+      animation: gradientMove 90s linear infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: opacity .3s ease;
+    }
+
+    .taskbar a:hover,
+    .taskbar-dropdown-trigger:hover {
+      opacity: .65;
+    }
+
+    .taskbar-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .taskbar-dropdown-trigger {
+      border: 0;
+      background-color: transparent;
+      cursor: inherit;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .taskbar-dropdown-trigger::after {
+      content: "▾";
+      font-size: 12px;
+      line-height: 1;
+      color: rgba(255,255,255,0.82);
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+    }
+
+    .taskbar-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      min-width: 210px;
+      padding: 12px;
+      border-radius: 20px;
+      transform: translateX(-50%) translateY(8px);
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(17, 13, 32, 0.9);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.32);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 5;
+    }
+
+    .taskbar-dropdown:hover .taskbar-dropdown-menu,
+    .taskbar-dropdown:focus-within .taskbar-dropdown-menu,
+    .taskbar-dropdown.open .taskbar-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .taskbar-dropdown-menu a {
+      padding: 10px 14px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(255,255,255,0.04);
+      transition: background-color 0.2s ease, opacity 0.2s ease;
+      color: rgba(255, 255, 255, 0.9);
+      background-clip: unset;
+      -webkit-background-clip: unset;
+    }
+
+    .taskbar-dropdown-menu a:hover,
+    .taskbar-dropdown-menu a:focus-visible {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+
+    .content {
+      width: min(1240px, 100%);
+      margin: 0 auto;
+      padding: 3rem 1.4rem 5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-title {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      line-height: 0.9;
+      margin-bottom: 2.2rem;
+    }
+
+    .hero-top {
+      font-family: Inter, sans-serif;
+      font-size: clamp(22px, 3.8vw, 46px);
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.74);
+      font-weight: 300;
+    }
+
+    .hero-bottom {
+      font-family: Inter, sans-serif;
+      font-size: clamp(38px, 8vw, 88px);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 800;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 6s ease-in-out infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.4),
+        0 0 32px rgba(168,85,247,0.28),
+        0 0 46px rgba(236,72,153,0.22);
+    }
+
+    .intro {
+      text-align: center;
+      font-size: 1.08rem;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.84);
+      max-width: 900px;
+      margin: 0 auto 2.5rem;
+    }
+
+    .photo-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.1rem;
+      padding: 1.4rem 0.3rem 1.4rem;
+      width: min(980px, 100%);
+      margin: 0 auto;
+    }
+
+    .photo-card {
+      border: 0;
+      border-radius: 0;
+      overflow: visible;
+      background: transparent;
+      cursor: inherit;
+      text-align: center;
+      color: #fff;
+      transition: transform 0.25s ease;
+      width: min(520px, 100%);
+      margin: 0 auto;
+    }
+
+    .photo-card:hover {
+      transform: translateY(-4px) scale(1.01);
+    }
+
+    .photo-card img {
+      width: 100%;
+      height: 290px;
+      object-fit: contain;
+      display: block;
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(12, 10, 22, 0.72);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24);
+      transition: box-shadow 0.25s ease;
+    }
+
+    .photo-card:hover img {
+      box-shadow: 0 16px 36px rgba(0,0,0,0.34);
+    }
+
+    .photo-card-title {
+      display: block;
+      padding: 0.8rem 0.4rem 0.2rem;
+      font-size: 1.02rem;
+      letter-spacing: 0.02em;
+      text-transform: none;
+      color: rgba(255,255,255,0.92);
+      font-weight: 650;
+      text-align: center;
+      line-height: 1.35;
+    }
+
+    .commercial-orbit {
+      position: relative;
+      width: min(840px, 100%);
+      min-height: 460px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    .commercial-bubble-btn {
+      width: min(420px, 90%);
+      min-height: 190px;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: linear-gradient(140deg, rgba(20, 15, 36, 0.88), rgba(30, 22, 48, 0.82));
+      box-shadow:
+        inset 0 0 26px rgba(255,255,255,0.08),
+        0 20px 42px rgba(0,0,0,0.32);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 0.45rem;
+      z-index: 3;
+    }
+
+    .commercial-bubble-btn .photo-card-title {
+      padding: 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .commercial-bubble-note {
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: rgba(238, 232, 255, 0.88);
+      max-width: 30ch;
+      text-align: center;
+    }
+
+    .commercial-float-photo {
+      position: absolute;
+      width: clamp(110px, 12vw, 160px);
+      aspect-ratio: 4 / 5;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(11, 9, 22, 0.84);
+      box-shadow: 0 10px 24px rgba(0,0,0,0.28);
+      pointer-events: none;
+      z-index: 2;
+      animation: commercialFloat 5.4s ease-in-out infinite;
+    }
+
+    .commercial-float-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .commercial-float-photo.p1 { top: 2%; left: 8%; animation-delay: 0s; }
+    .commercial-float-photo.p2 { top: 8%; right: 8%; animation-delay: 0.5s; }
+    .commercial-float-photo.p3 { top: 50%; left: 1%; animation-delay: 1s; }
+    .commercial-float-photo.p4 { top: 52%; right: 1%; animation-delay: 1.5s; }
+    .commercial-float-photo.p5 { bottom: 4%; left: 12%; animation-delay: 2s; }
+    .commercial-float-photo.p6 { bottom: 5%; right: 12%; animation-delay: 2.5s; }
+
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.4rem;
+      background: rgba(6, 5, 14, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 1200;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-panel {
+      width: min(1180px, 100%);
+      max-height: min(88vh, 880px);
+      display: block;
+      padding: 1.2rem;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(14, 10, 26, 0.95);
+      box-shadow: 0 22px 54px rgba(0,0,0,0.45);
+      position: relative;
+    }
+
+    .orbit-gallery {
+      position: relative;
+      min-height: min(72vh, 760px);
+      border-radius: 20px;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 62%);
+      overflow: hidden;
+    }
+
+    .orbit-photos {
+      position: absolute;
+      inset: 0;
+    }
+
+    .orbit-photo {
+      position: absolute;
+      left: var(--x, 50%);
+      top: var(--y, 50%);
+      width: clamp(120px, 17vw, 220px);
+      aspect-ratio: 4 / 5;
+      transform: translate(-50%, -50%);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 18px;
+      overflow: hidden;
+      padding: 0;
+      background: rgba(255,255,255,0.06);
+      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-80%25' y='-80%25' width='260%25' height='260%25'><feGaussianBlur in='SourceGraphic' stdDeviation='2.5' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='9' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><circle cx='16' cy='16' r='10' fill='none' stroke='url(%23g)' stroke-width='3'/><line x1='23.5' y1='23.5' x2='36' y2='36' stroke='url(%23g)' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='16' r='5' fill='url(%23g)' opacity='0.2'/></g></svg>") 16 16, zoom-in;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.22);
+      isolation: isolate;
+      animation: floaty var(--float-duration, 7s) ease-in-out infinite;
+      transition: transform 0.2s ease;
+    }
+
+    .orbit-photo.commercial-large {
+      width: clamp(180px, 24vw, 320px);
+      border: 0;
+      background: transparent;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.18);
+    }
+
+    .orbit-photo:hover {
+      transform: translate(-50%, -50%) scale(1.04);
+      box-shadow: none;
+      z-index: 3;
+    }
+
+    .orbit-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: rgba(8, 7, 16, 0.7);
+    }
+
+    .orbit-photo.commercial-large img {
+      background: transparent;
+    }
+
+    .collage-zoom {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.1rem;
+      background: rgba(6, 5, 14, 0.88);
+      backdrop-filter: blur(8px);
+      z-index: 1300;
+    }
+
+    .collage-zoom.open {
+      display: flex;
+    }
+
+    .collage-zoom img {
+      max-width: min(94vw, 1500px);
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .collage-zoom-close {
+      position: absolute;
+      top: 0.9rem;
+      right: 1rem;
+      width: 42px;
+      height: 42px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.16);
+      color: #fff;
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: inherit;
+      z-index: 2;
+    }
+
+    .orbit-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(440px, 80%);
+      padding: 1.5rem 1.4rem;
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(14, 10, 26, 0.82);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.34);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      z-index: 2;
+    }
+
+    .orbit-center h2 {
+      font-family: Inter, sans-serif;
+      font-size: clamp(1.4rem, 2.5vw, 2.1rem);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      line-height: 1.1;
+      color: #fff;
+    }
+
+    .orbit-center p {
+      font-size: 1.03rem;
+      line-height: 1.7;
+      color: rgba(233, 226, 255, 0.86);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 0.7rem;
+      right: 0.75rem;
+      width: 40px;
+      height: 40px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.12);
+      color: #fff;
+      font-size: 1.6rem;
+      line-height: 1;
+      cursor: inherit;
+      z-index: 8;
+    }
+
+    .lightbox-close:hover {
+      background: rgba(255,255,255,0.2);
+    }
+
+    @keyframes floaty {
+      0% { transform: translate(-50%, -50%) translateY(0); }
+      50% { transform: translate(-50%, -50%) translateY(-8px); }
+      100% { transform: translate(-50%, -50%) translateY(0); }
+    }
+
+    @keyframes commercialFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (max-width: 900px) {
+      .taskbar {
+        gap: 16px;
+        padding: 14px 8px;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+
+      .taskbar a,
+      .taskbar-dropdown-trigger {
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .taskbar-dropdown-menu {
+        top: calc(100% + 10px);
+        left: 0;
+        transform: translateX(0) translateY(8px);
+        min-width: 180px;
+      }
+
+      .taskbar-dropdown:hover .taskbar-dropdown-menu,
+      .taskbar-dropdown:focus-within .taskbar-dropdown-menu,
+      .taskbar-dropdown.open .taskbar-dropdown-menu {
+        transform: translateX(0) translateY(0);
+      }
+
+      .lightbox-panel {
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+
+      .orbit-gallery {
+        min-height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        padding: 0.9rem;
+      }
+
+      .orbit-center {
+        position: static;
+        transform: none;
+        width: 100%;
+        order: 1;
+      }
+
+      .orbit-photos {
+        position: static;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .orbit-photo {
+        position: static;
+        left: auto;
+        top: auto;
+        width: 100%;
+        transform: none;
+        animation: none;
+      }
+
+      .orbit-photo:hover {
+        transform: translateY(-3px);
+      }
+
+      .commercial-orbit {
+        min-height: auto;
+        padding: 0.8rem 0 0;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.85rem;
+      }
+
+      .commercial-bubble-btn {
+        width: 100%;
+        min-height: 160px;
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      .commercial-float-photo {
+        position: static;
+        width: 100%;
+        animation-duration: 4.8s;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="galaxyCanvas"></canvas>
+
+  <div class="taskbar">
+    <a href="index.html#home-section">Home</a>
+    <a href="index.html#about-section">About</a>
+    <a href="index.html#skills-section">Skills</a>
+    <div class="taskbar-dropdown" id="workDropdown">
+      <button class="taskbar-dropdown-trigger" id="workDropdownTrigger" type="button" aria-expanded="false" aria-controls="workDropdownMenu">Work</button>
+      <div class="taskbar-dropdown-menu" id="workDropdownMenu">
+        <a href="index.html#work-section">Work</a>
+        <a href="print-graphics.html">Graphics</a>
+        <a href="photography.html">Photography</a>
+      </div>
+    </div>
+    <a href="index.html#resume-section">Resume</a>
+    <a href="index.html#contact-section">Contact</a>
+  </div>
+
+  <main class="content">
+    <section>
+      <p class="intro">Scroll through the categories and click any card to open a large-view showcase. This mirrors the Photography section so both portfolio areas feel consistent and easy to browse.</p>
+
+      <div class="photo-strip" id="photoStrip" aria-label="Graphics gallery">
+        <button class="photo-card" type="button" data-category="print" data-image="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-582c42e2-967b-409c-ad6b-adaa3da58d6f.jpg" data-title="Print and Template Graphics" data-caption="Print and template-ready assets designed for announcements, recruiting, branding, and business development.">
+          <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-582c42e2-967b-409c-ad6b-adaa3da58d6f.jpg" alt="Print graphics category">
+          <span class="photo-card-title">Print and Template Graphics</span>
+        </button>
+
+      </div>
+    </section>
+  </main>
+
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <div class="lightbox-panel" role="dialog" aria-modal="true" aria-labelledby="lightboxTitle">
+      <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close image view">×</button>
+      <div class="orbit-gallery" id="orbitGallery">
+        <div class="orbit-photos" id="orbitPhotos" aria-label="Category photos"></div>
+        <div class="orbit-center">
+          <h2 id="lightboxTitle">Graphics Category</h2>
+          <p id="lightboxCaption"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="collage-zoom" id="collageZoom" aria-hidden="true">
+    <button class="collage-zoom-close" id="collageZoomClose" type="button" aria-label="Close zoom view">×</button>
+    <img id="collageZoomImage" src="" alt="Expanded photo">
+  </div>
+
+  <script>
+    if (new URLSearchParams(window.location.search).get("embed") === "1") {
+      document.documentElement.classList.add("embed-mode");
+      document.body.classList.add("embed-mode");
+    }
+
+    const canvas = document.getElementById("galaxyCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener("resize", resizeCanvas);
+
+    const stars = Array.from({ length: 320 }, () => ({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      z: Math.random() * 1000,
+      size: Math.random() * 1.8 + 0.3,
+      vx: (Math.random() - 0.5) * 0.12,
+      vy: (Math.random() - 0.5) * 0.12
+    }));
+
+    function drawGalaxy() {
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2,
+        canvas.height / 2,
+        0,
+        canvas.width / 2,
+        canvas.height / 2,
+        canvas.width * 0.95
+      );
+
+      gradient.addColorStop(0, "rgba(30, 20, 45, 1)");
+      gradient.addColorStop(0.55, "rgba(18, 14, 28, 1)");
+      gradient.addColorStop(1, "rgba(5, 5, 15, 1)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      stars.forEach((star) => {
+        star.x += star.vx;
+        star.y += star.vy;
+        if (star.x < 0) star.x = canvas.width;
+        if (star.x > canvas.width) star.x = 0;
+        if (star.y < 0) star.y = canvas.height;
+        if (star.y > canvas.height) star.y = 0;
+
+        const depth = 1 - star.z / 1000;
+        const alpha = depth * 0.9;
+        const size = star.size * depth * 2;
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(210, 220, 255, ${alpha})`;
+        ctx.arc(star.x, star.y, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        star.z += 0.45;
+        if (star.z > 1000) star.z = 0;
+      });
+
+      requestAnimationFrame(drawGalaxy);
+    }
+
+    drawGalaxy();
+
+    (function() {
+      const dropdown = document.getElementById("workDropdown");
+      const trigger = document.getElementById("workDropdownTrigger");
+       const menu = document.getElementById("workDropdownMenu");
+       if (!dropdown || !trigger) return;
+
+       let closeTimeout;
+
+      function setExpanded(isOpen) {
+        dropdown.classList.toggle("open", isOpen);
+        trigger.setAttribute("aria-expanded", String(isOpen));
+         clearTimeout(closeTimeout);
+      }
+
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setExpanded(!dropdown.classList.contains("open"));
+      });
+
+       dropdown.addEventListener("mouseenter", () => {
+         clearTimeout(closeTimeout);
+         setExpanded(true);
+       });
+
+       dropdown.addEventListener("mouseleave", () => {
+         closeTimeout = setTimeout(() => setExpanded(false), 150);
+       });
+
+       if (menu) {
+         menu.addEventListener("click", (event) => {
+           if (event.target.tagName === "A") {
+             setExpanded(false);
+           }
+         });
+       }
+
+      document.addEventListener("click", (event) => {
+         if (!dropdown.contains(event.target)) {
+           clearTimeout(closeTimeout);
+           setExpanded(false);
+         }
+      });
+
+      document.addEventListener("keydown", (event) => {
+         if (event.key === "Escape") {
+           clearTimeout(closeTimeout);
+           setExpanded(false);
+         }
+      });
+    })();
+
+    const lightbox = document.getElementById("lightbox");
+    const lightboxTitle = document.getElementById("lightboxTitle");
+    const lightboxCaption = document.getElementById("lightboxCaption");
+    const orbitPhotos = document.getElementById("orbitPhotos");
+    const collageZoom = document.getElementById("collageZoom");
+    const collageZoomImage = document.getElementById("collageZoomImage");
+    const collageZoomClose = document.getElementById("collageZoomClose");
+    const lightboxClose = document.getElementById("lightboxClose");
+    const photoCards = document.querySelectorAll(".photo-card");
+
+    const photoPositions = [
+      { x: 18, y: 20 },
+      { x: 82, y: 22 },
+      { x: 14, y: 50 },
+      { x: 86, y: 50 },
+      { x: 22, y: 80 },
+      { x: 78, y: 78 }
+    ];
+
+    const categoryPhotos = {
+      print: [
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-582c42e2-967b-409c-ad6b-adaa3da58d6f.jpg", alt: "Print handout design" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-607eb387-d717-4eef-aa0c-b3eefc86d639.jpg", alt: "Sell sheet handout" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-b806c223-cacd-4bc3-9779-5b9c1a6ad96a.jpg", alt: "Print template graphic" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f5220752-c559-4075-9410-5beb2cd83eed.jpg", alt: "Print graphic five" }
+      ],
+
+      sport: [
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-56ed0cec-ee14-46fe-a87d-9837c25d27ec.jpg", alt: "Sport graphic one" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7ba1dabc-25ad-40af-9654-07f398a2e117.jpg", alt: "Sport graphic two" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-61f7a19b-a605-4bc3-aa70-282185d6a5aa.jpg", alt: "Sport graphic three" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-3e904fae-7306-4c24-a0e9-6bd5f812b5f8.jpg", alt: "Sport graphic four" }
+      ],
+      campaign: [
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-e97237a9-14ea-429d-a0a1-7a2d761eee64.jpg", alt: "135 Thanks logo", style: "mix-blend-mode: multiply;" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-a504a322-58ca-48be-a46c-9a09f2094191.jpg?e=webp&cX=116.76045627376425&cY=0&cW=558.4790874524715&cH=612", alt: "Campaign certificate" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-fdf87fce-d02a-4db6-8479-cb73eb9f7c70.jpg", alt: "135 Thanks campaign package" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4c5c1d63-285b-4b90-b4a3-dcd42116d00a.png", alt: "Mile of Music signage graphic" },
+        { src: "https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7e0dc7a9-5b29-49d4-a864-ccea02b2fa8e.jpg", alt: "Printed Mile of Music signage" }
+      ]
+    };
+
+    function openCollageZoom(src, alt) {
+      if (!collageZoom || !collageZoomImage || !src) return;
+      collageZoomImage.src = src;
+      collageZoomImage.alt = alt || "Expanded photo";
+      collageZoom.classList.add("open");
+      collageZoom.setAttribute("aria-hidden", "false");
+    }
+
+    function closeCollageZoom() {
+      if (!collageZoom || !collageZoomImage) return;
+      collageZoom.classList.remove("open");
+      collageZoom.setAttribute("aria-hidden", "true");
+      collageZoomImage.src = "";
+    }
+
+    function renderOrbitPhotos(photos, category) {
+      if (!orbitPhotos) return;
+      orbitPhotos.innerHTML = "";
+
+      photos.slice(0, 6).forEach((photo, index) => {
+        const pos = photoPositions[index % photoPositions.length];
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "orbit-photo";
+        if (category === "commercial") {
+          btn.classList.add("commercial-large");
+        }
+        btn.style.setProperty("--x", `${pos.x}%`);
+        btn.style.setProperty("--y", `${pos.y}%`);
+        btn.style.setProperty("--float-duration", `${6 + (index % 3)}s`);
+        btn.style.animationDelay = `${index * 0.25}s`;
+        btn.setAttribute("aria-label", `Open ${photo.alt || "photo"} fullscreen`);
+        btn.innerHTML = `<img src="${photo.src}" alt="${photo.alt || "Gallery photo"}"${photo.style ? ` style="${photo.style}"` : ""}>`;  
+        btn.addEventListener("click", () => openCollageZoom(photo.src, photo.alt));
+        orbitPhotos.appendChild(btn);
+      });
+    }
+
+    function openLightbox(card) {
+      const title = card.dataset.title || "Graphics Category";
+      const caption = card.dataset.caption || "";
+      const category = card.dataset.category || "";
+      const photos = categoryPhotos[category] || [];
+
+      lightboxTitle.textContent = title;
+      lightboxCaption.textContent = caption;
+      renderOrbitPhotos(photos, category);
+
+      lightbox.classList.add("open");
+      lightbox.setAttribute("aria-hidden", "false");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeLightbox() {
+      closeCollageZoom();
+      lightbox.classList.remove("open");
+      lightbox.setAttribute("aria-hidden", "true");
+      document.body.style.overflow = "";
+      if (orbitPhotos) orbitPhotos.innerHTML = "";
+    }
+
+    photoCards.forEach((card) => {
+      card.addEventListener("click", () => openLightbox(card));
+    });
+
+    if (collageZoomClose) {
+      collageZoomClose.addEventListener("click", closeCollageZoom);
+    }
+
+    if (collageZoom) {
+      collageZoom.addEventListener("click", (event) => {
+        if (event.target === collageZoom) closeCollageZoom();
+      });
+    }
+
+    lightboxClose.addEventListener("click", closeLightbox);
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && collageZoom && collageZoom.classList.contains("open")) {
+        closeCollageZoom();
+      } else if (event.key === "Escape" && lightbox.classList.contains("open")) {
+        closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>

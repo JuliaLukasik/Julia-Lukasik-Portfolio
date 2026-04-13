@@ -1,0 +1,2769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Julia Lukasik - Portfolio</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #e0e0e0;
+      overflow-x: hidden;
+      width: 100%;
+      height: 100%;
+      padding-top: 76px;
+      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-60%25' y='-60%25' width='220%25' height='220%25'><feGaussianBlur in='SourceGraphic' stdDeviation='1.2' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='2.2' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='3.8' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><polygon points='20,3 23.5,15 36,15 26,22.5 29.5,35 20,27.5 10.5,35 14,22.5 4,15 16.5,15' fill='url(%23g)'/></g></svg>") 20 20, auto;
+    }
+
+    html {
+      width: 100%;
+      height: 100%;
+    }
+
+    #galaxyCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1; /* global animated page background */
+      pointer-events: none;
+    }
+
+    /* TOP QUICK NAV */
+    .taskbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 34px;
+      padding: 18px 10px;
+      z-index: 999;
+      backdrop-filter: blur(14px);
+      background: linear-gradient(
+        120deg,
+        rgba(20,18,32,0.62),
+        rgba(28,24,44,0.56),
+        rgba(36,28,56,0.52),
+        rgba(42,30,56,0.5)
+      );
+      border-bottom: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.24), inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .taskbar a,
+    .taskbar-dropdown-trigger {
+      font-family: Inter, sans-serif;
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 400% 400%;
+      animation: gradientMove 90s linear infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      transition: opacity .3s ease;
+    }
+
+    .taskbar a:hover,
+    .taskbar-dropdown-trigger:hover {
+      opacity: .65;
+    }
+
+    .taskbar-dropdown {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .taskbar-dropdown-trigger {
+      border: 0;
+      background-color: transparent;
+      cursor: inherit;
+      padding: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .taskbar-dropdown-trigger::after {
+      content: "▾";
+      font-size: 12px;
+      line-height: 1;
+      color: rgba(255,255,255,0.82);
+      background: none;
+      -webkit-background-clip: initial;
+      background-clip: initial;
+    }
+
+    .taskbar-dropdown-menu {
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 50%;
+      min-width: 210px;
+      padding: 12px;
+      border-radius: 20px;
+      transform: translateX(-50%) translateY(8px);
+      opacity: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: rgba(17, 13, 32, 0.9);
+      backdrop-filter: blur(18px);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.32);
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .taskbar-dropdown:hover .taskbar-dropdown-menu,
+    .taskbar-dropdown:focus-within .taskbar-dropdown-menu,
+    .taskbar-dropdown.open .taskbar-dropdown-menu {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .taskbar-dropdown-menu a {
+      padding: 10px 14px;
+      border-radius: 14px;
+      text-align: center;
+      background: rgba(255,255,255,0.04);
+      transition: background-color 0.2s ease, opacity 0.2s ease;
+      color: rgba(255, 255, 255, 0.9);
+      background-clip: unset;
+      -webkit-background-clip: unset;
+    }
+
+    .taskbar-dropdown-menu a:hover,
+    .taskbar-dropdown-menu a:focus-visible {
+      opacity: 1;
+      background: rgba(255,255,255,0.1);
+      outline: none;
+    }
+
+    #home-section,
+    #about-section,
+    #skills-section,
+    #work-section,
+    #resume-section,
+    #contact-section {
+      scroll-margin-top: 92px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      padding: 2rem;
+    }
+
+    .hero {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      min-height: 100vh;
+      padding: 2rem;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+
+    .hero > div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      gap: 1.5rem;
+    }
+
+    .hero-title {
+      display: flex;
+      flex-direction: column;
+      line-height: 0.9;
+      text-align: center;
+      width: 100%;
+    }
+
+    .hero-top {
+      font-family: Inter, sans-serif;
+      font-size: 72px;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: rgba(255,255,255,0.75);
+      -webkit-text-stroke: 0.6px rgba(255,255,255,0.35);
+      backdrop-filter: blur(4px);
+    }
+
+    .hero-bottom {
+      font-family: Inter, sans-serif;
+      font-size: 120px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 6s ease-in-out infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      text-shadow:
+        0 0 12px rgba(255,255,255,0.45),
+        0 0 28px rgba(168,85,247,0.35),
+        0 0 40px rgba(236,72,153,0.25);
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero-headshot-wrapper {
+      position: relative;
+      width: 260px;
+      height: 340px;
+      border-radius: 22px;
+      overflow: hidden;
+    }
+
+    .hero-headshot {
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      object-fit: cover;
+      transition: 0.35s ease;
+      filter: brightness(1.05) saturate(1.05);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-headshot-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 400% 400%;
+      animation: slowGradient 65s ease-in-out infinite;
+      mix-blend-mode: color;
+      opacity: 1;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes slowGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .hero-subtext {
+      font-family: Inter, sans-serif;
+      font-size: 22px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.8);
+      max-width: 700px;
+      margin: 0;
+      text-align: center;
+    }
+
+    .button-row {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      gap: 40px;
+      align-items: center;
+      justify-content: center;
+      transform: scale(0.75);
+      transform-origin: center;
+      margin-top: -5rem;
+    }
+
+    .btn-wrapper {
+      position: relative;
+      width: 320px;
+      height: 320px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .magic-btn {
+      position: relative;
+      padding: 18px 42px;
+      border-radius: 44px;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-family: Inter, sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      cursor: inherit;
+      transition: 0.3s ease;
+      z-index: 10;
+    }
+
+    .magic-btn:hover {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255,255,255,0.4);
+    }
+
+    .orbit-icon {
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      opacity: 0;
+      transition: opacity 0.25s ease;
+      filter: drop-shadow(0 0 4px rgba(255,255,255,0.7));
+      pointer-events: none;
+    }
+
+    #about-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 7rem 6rem;
+      position: relative;
+      z-index: 1;
+      overflow: visible;
+    }
+
+    #orbit-widget {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      height: auto;
+      min-height: 640px;
+      margin: 0 auto;
+      overflow: visible;
+      font-family: Inter, sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
+    }
+
+    #orbit-widget .bubble {
+      position: relative;
+      width: 820px;
+      min-height: 640px;
+      height: auto;
+      padding: 48px;
+      border-radius: 32px;
+      backdrop-filter: blur(20px);
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      box-shadow:
+        inset 0 0 20px rgba(255,255,255,0.2),
+        0 25px 50px rgba(0,0,0,0.3);
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    #orbit-widget .about-text {
+      font-size: 20px;
+      line-height: 1.8;
+      opacity: 0.95;
+      letter-spacing: 0.3px;
+      text-align: left;
+    }
+
+    .hero-headshot-wrapper {
+      position: relative;
+      width: 460px;
+      height: 620px;
+      border-radius: 22px;
+      overflow: hidden;
+      flex-shrink: 0;
+      align-self: center;
+      transform: translateY(60px);
+    }
+
+    .hero-headshot {
+      width: 100%;
+      height: 100%;
+      border-radius: 22px;
+      object-fit: cover;
+      transition: 0.35s ease;
+      filter: brightness(1.05) saturate(1.05);
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-headshot-wrapper::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 22px;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 400% 400%;
+      animation: slowGradient 65s ease-in-out infinite;
+      mix-blend-mode: color;
+      opacity: 1;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    @keyframes slowGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #full-page-orbit {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    #full-page-orbit .orbit-image {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      filter: drop-shadow(0 0 12px rgba(255,255,255,0.9));
+      animation: twinkle 3s ease-in-out infinite;
+    }
+
+    .portfolio-heading {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+      font-family: Inter, sans-serif;
+      margin-bottom: 1rem;
+      text-align: left;
+    }
+
+    .portfolio-top {
+      font-size: 32px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease-in-out infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .portfolio-bottom {
+      font-size: 48px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .scroll-indicator {
+      position: fixed;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .scroll-indicator.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .scroll-indicator-text {
+      font-family: Inter, sans-serif;
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 300;
+    }
+
+    .scroll-arrow {
+      width: 32px;
+      height: 32px;
+      color: rgba(255, 255, 255, 0.8);
+      animation: arrowBounce 2s infinite;
+      filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.6)) drop-shadow(0 0 12px rgba(200, 150, 255, 0.4));
+    }
+
+    @keyframes arrowBounce {
+      0%, 100% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      50% {
+        transform: translateY(8px);
+      }
+    }
+
+    /* SKILLS SECTION STYLES */
+    #skills-section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 6rem 2rem;
+      background: transparent;
+      position: relative;
+      z-index: 3;
+    }
+
+    .subheading {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.05;
+      font-family: Inter, sans-serif;
+      margin-bottom: 3.5rem;
+      text-align: center;
+    }
+
+    .sub-expertise {
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease-in-out infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .sub-main {
+      font-size: 42px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #ffffff;
+    }
+
+    .logos-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      gap: 3.1rem;
+      flex-wrap: wrap;
+    }
+
+    .logo-item {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: inherit;
+    }
+
+    .floater { position: static; }
+
+    .logo-card {
+      position: relative;
+      width: 112px;
+      height: 112px;
+      border-radius: 22px;
+      overflow: hidden;
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(14px);
+      border: 2px solid rgba(255,255,255,0.14);
+      padding: 10px;
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .logo-item:hover .logo-card {
+      transform: scale(1.12);
+      border-color: rgba(255,255,255,0.28);
+    }
+
+    .tooltip {
+      position: absolute;
+      top: calc(100% + 72px);
+      left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      width: 320px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    .tooltip-inner {
+      background: rgba(12,6,28,0.9);
+      backdrop-filter: blur(24px);
+      border-radius: 20px;
+      padding: 18px 20px;
+      text-align: center;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .tooltip-name { font-size: 1.02rem; font-weight: 700; }
+
+    .tooltip-divider {
+      height: 1px;
+      margin: 10px 0;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      opacity: 0.35;
+    }
+
+    .tooltip-desc {
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: rgba(220,205,255,0.72);
+    }
+
+    .tooltip-arrow {
+      width: 0;
+      height: 0;
+      order: -1;
+      margin: 0 auto -1px;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
+      border-top: 0 !important;
+      border-bottom: 7px solid var(--brand) !important;
+      opacity: 0.7;
+    }
+
+    .logo-label {
+      margin-top: 20px;
+      font-size: 0.92rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: rgba(224,214,255,0.72);
+      text-align: center;
+      max-width: 150px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .logo-item:hover .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    .logo-item:hover .logo-label,
+    .logo-item:focus-within .logo-label,
+    .logo-item.is-open .logo-label {
+      color: var(--brand);
+      text-shadow: 0 0 10px color-mix(in srgb, var(--brand) 70%, white 30%), 0 0 22px color-mix(in srgb, var(--brand) 80%, transparent 20%);
+    }
+
+    .logo-item:focus-within .tooltip,
+    .logo-item.is-open .tooltip {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      pointer-events: auto;
+    }
+
+    @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes float2 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-14px); } }
+    @keyframes float3 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-11px); } }
+    @keyframes float4 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-16px); } }
+    @keyframes float5 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+    @keyframes float6 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-13px); } }
+    @keyframes float7 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
+
+    .logo-item:nth-child(1) .floater { animation: float1 3.1s ease-in-out infinite; }
+    .logo-item:nth-child(2) .floater { animation: float2 3.45s ease-in-out infinite; }
+    .logo-item:nth-child(3) .floater { animation: float3 3.8s ease-in-out infinite; }
+    .logo-item:nth-child(4) .floater { animation: float4 3.15s ease-in-out infinite; }
+    .logo-item:nth-child(5) .floater { animation: float5 3.5s ease-in-out infinite; }
+    .logo-item:nth-child(6) .floater { animation: float6 3.85s ease-in-out infinite; }
+    .logo-item:nth-child(7) .floater { animation: float7 3.2s ease-in-out infinite; }
+
+    /* SELECTED WORK SECTION */
+    #work-section {
+      min-height: 100vh;
+      padding: 5rem 2rem 7rem;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .work-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-family: Inter, sans-serif;
+    }
+
+    .work-top {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease-in-out infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .work-main {
+      font-size: 44px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+
+    .work-tabs {
+      width: min(1220px, 100%);
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+      gap: 0.7rem;
+      margin-top: 0.7rem;
+      padding: 0.35rem 0.35rem 0.9rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .work-tab {
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 12px 12px 0 0;
+      background: rgba(255,255,255,0.04);
+      color: rgba(241,239,255,0.78);
+      padding: 0.6rem 1.05rem 0.52rem;
+      font-family: Inter, sans-serif;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      cursor: inherit;
+      transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
+    }
+
+    .work-tab:hover {
+      border-color: rgba(168,85,247,0.5);
+      color: #fff;
+    }
+
+    .work-tab.active {
+      border-color: rgba(168,85,247,0.68);
+      background: rgba(168,85,247,0.2);
+      color: #fff;
+      box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25);
+    }
+
+    .work-note {
+      margin-top: 1.8rem;
+      text-align: center;
+      color: rgba(220, 205, 255, 0.72);
+      font-family: Inter, sans-serif;
+      letter-spacing: 0.04em;
+    }
+
+    .embedded-work-stack {
+      width: min(1220px, 100%);
+      margin-top: 0.8rem;
+      display: grid;
+      gap: 2.1rem;
+    }
+
+    .embedded-work-heading {
+      margin-top: 2rem;
+      margin-bottom: 3.25rem;
+    }
+
+    #work-graphics-embed {
+      margin-top: 5rem;
+    }
+
+    .embedded-work-card {
+      display: block;
+      border-radius: 0;
+      overflow: visible;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      scroll-margin-top: 110px;
+    }
+
+    .embedded-work-card iframe {
+      display: block;
+      width: 100%;
+      border: 0;
+      min-height: 1300px;
+      background: #090610;
+    }
+
+    .photo-bubble-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.05rem 1.4rem;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.24);
+      background: rgba(255,255,255,0.09);
+      color: #ffffff;
+      font-family: Inter, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: inherit;
+      transition: transform 0.22s ease, background 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+
+    .commercial-orbit-wrap {
+      position: relative;
+      width: min(1040px, 100%);
+      min-height: 560px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+    }
+
+    .photo-bubble-button.commercial-center-button {
+      width: min(420px, 92%);
+      min-height: 188px;
+      border-radius: 32px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: linear-gradient(140deg, rgba(20, 15, 36, 0.88), rgba(30, 22, 48, 0.82));
+      box-shadow:
+        inset 0 0 26px rgba(255,255,255,0.08),
+        0 20px 42px rgba(0,0,0,0.32);
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      z-index: 3;
+      padding: 1.4rem;
+      cursor: inherit;
+      pointer-events: none;
+    }
+
+    .commercial-center-title {
+      font-size: 1.22rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      line-height: 1.15;
+      text-align: center;
+    }
+
+    .commercial-center-note {
+      font-size: 0.96rem;
+      line-height: 1.62;
+      color: rgba(238, 232, 255, 0.88);
+      text-transform: none;
+      letter-spacing: 0.01em;
+      font-weight: 500;
+      text-align: center;
+      max-width: 35ch;
+    }
+
+    .photo-orbit-group {
+      margin-top: 8rem;
+    }
+
+    .commercial-orbit-shot {
+      position: absolute;
+      left: var(--shot-x, 50%);
+      top: var(--shot-y, 50%);
+      transform: translate(-50%, -50%);
+      width: clamp(140px, 12vw, 170px);
+      height: clamp(176px, 15vw, 212px);
+      background: transparent;
+      border: 0;
+      box-shadow: none;
+      z-index: 2;
+      padding: 0;
+      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-80%25' y='-80%25' width='260%25' height='260%25'><feGaussianBlur in='SourceGraphic' stdDeviation='2.5' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='9' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><circle cx='16' cy='16' r='10' fill='none' stroke='url(%23g)' stroke-width='3'/><line x1='23.5' y1='23.5' x2='36' y2='36' stroke='url(%23g)' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='16' r='5' fill='url(%23g)' opacity='0.2'/></g></svg>") 16 16, zoom-in;
+      opacity: 1;
+      transition: left 0.58s cubic-bezier(0.22, 1, 0.36, 1), top 0.58s cubic-bezier(0.22, 1, 0.36, 1), transform 0.58s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.2s ease;
+    }
+
+    .commercial-orbit-shot:hover {
+      filter: brightness(1.08);
+    }
+
+    .commercial-orbit-shot img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: transparent;
+      border: 0;
+      border-radius: 0;
+      box-shadow: none;
+      display: block;
+      animation: floatOrbitPhoto 7.5s ease-in-out infinite;
+    }
+
+    .commercial-orbit-shot.s1 { --shot-x: 23%; --shot-y: 18%; animation-delay: 0s; }
+    .commercial-orbit-shot.s2 { --shot-x: 77%; --shot-y: 18%; animation-delay: 0.5s; }
+    .commercial-orbit-shot.s3 { --shot-x: 11%; --shot-y: 50%; animation-delay: 1s; }
+    .commercial-orbit-shot.s4 { --shot-x: 89%; --shot-y: 50%; animation-delay: 1.5s; }
+    .commercial-orbit-shot.s5 { --shot-x: 27%; --shot-y: 82%; animation-delay: 2s; }
+    .commercial-orbit-shot.s6 { --shot-x: 73%; --shot-y: 82%; animation-delay: 2.5s; }
+
+    .campaign-orbit-four .commercial-orbit-shot.s1 { --shot-x: 18%; --shot-y: 24%; }
+    .campaign-orbit-four .commercial-orbit-shot.s2 { --shot-x: 82%; --shot-y: 24%; }
+    .campaign-orbit-four .commercial-orbit-shot.s3 { --shot-x: 18%; --shot-y: 76%; }
+    .campaign-orbit-four .commercial-orbit-shot.s4 { --shot-x: 82%; --shot-y: 76%; }
+
+    .commercial-orbit-wrap.is-collapsed .commercial-orbit-shot {
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0.68);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .commercial-orbit-wrap.is-collapsed .commercial-orbit-shot img {
+      animation-play-state: paused;
+    }
+
+    @keyframes floatOrbitPhoto {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .photo-bubble-button:hover {
+      transform: translateY(-3px);
+      background: rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.36);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.26);
+    }
+
+    .photo-bubble-modal {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.3rem;
+      background: rgba(6,5,14,0.86);
+      backdrop-filter: blur(8px);
+      z-index: 2100;
+    }
+
+    .photo-bubble-modal.open {
+      display: flex;
+    }
+
+    .photo-bubble-panel {
+      width: auto;
+      max-width: 96vw;
+      border-radius: 16px;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      padding: 0;
+      position: relative;
+    }
+
+    .photo-bubble-close {
+      position: absolute;
+      top: 0.8rem;
+      right: 0.9rem;
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 0;
+      background: rgba(255,255,255,0.14);
+      color: #fff;
+      font-size: 1.45rem;
+      cursor: inherit;
+    }
+
+    .photo-bubble-title {
+      font-family: Inter, sans-serif;
+      font-size: 2rem;
+      line-height: 1.1;
+      margin-bottom: 0.6rem;
+      color: #fff;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .photo-bubble-copy {
+      font-size: 1.03rem;
+      line-height: 1.72;
+      color: rgba(241,239,255,0.88);
+      max-width: 900px;
+      margin-bottom: 1.1rem;
+    }
+
+    .photo-bubble-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .photo-bubble-gallery img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .photo-bubble-view-image {
+      display: block;
+      max-width: min(94vw, 1500px);
+      max-height: 90vh;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(255,255,255,0.03);
+    }
+
+    @media (max-width: 900px) {
+      .sub-main { font-size: 34px; }
+      .sub-expertise { font-size: 14px; }
+      .logo-card { width: 94px; height: 94px; border-radius: 20px; }
+      .logos-row { gap: 2.1rem; }
+      .tooltip { width: 270px; top: calc(100% + 60px); }
+
+      .work-main { font-size: 34px; }
+      .work-tabs { justify-content: center; }
+      .embedded-work-heading .work-top { font-size: 16px; }
+      .embedded-work-heading .work-main { font-size: 34px; }
+
+      .commercial-orbit-wrap {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-areas:
+          "center center"
+          "s1 s2"
+          "s3 s4"
+          "s5 s6";
+        gap: 0.8rem;
+        padding-top: 0.6rem;
+      }
+
+      .campaign-orbit-four {
+        grid-template-areas:
+          "center center"
+          "s1 s2"
+          "s3 s4";
+      }
+
+      .photo-orbit-group {
+        margin-top: 4.75rem;
+      }
+
+      .photo-bubble-button.commercial-center-button {
+        width: 100%;
+        min-height: 158px;
+        grid-area: center;
+        grid-column: 1 / -1;
+        order: -1;
+      }
+
+      .commercial-orbit-shot {
+        position: static;
+        left: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        height: auto;
+        justify-self: center;
+        transition: transform 0.45s ease, opacity 0.35s ease, max-height 0.45s ease;
+      }
+
+      .commercial-orbit-shot.s1 { grid-area: s1; }
+      .commercial-orbit-shot.s2 { grid-area: s2; }
+      .commercial-orbit-shot.s3 { grid-area: s3; }
+      .commercial-orbit-shot.s4 { grid-area: s4; }
+      .commercial-orbit-shot.s5 { grid-area: s5; }
+      .commercial-orbit-shot.s6 { grid-area: s6; }
+
+      .commercial-orbit-shot img {
+        width: 100%;
+        height: auto;
+        max-height: 220px;
+      }
+
+      .commercial-orbit-wrap.is-collapsed .commercial-orbit-shot {
+        opacity: 0;
+        transform: scale(0.86);
+        max-height: 0;
+        overflow: hidden;
+        pointer-events: none;
+      }
+    }
+
+    @media (max-width: 820px) {
+      .work-tabs { flex-wrap: wrap; }
+    }
+
+    @media (max-width: 600px) {
+      body { padding-top: 68px; }
+      .taskbar {
+        gap: 16px;
+        padding: 14px 8px;
+        overflow-x: auto;
+        justify-content: flex-start;
+      }
+      .taskbar a {
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .taskbar-dropdown-trigger {
+        font-size: 13px;
+        white-space: nowrap;
+      }
+
+      .taskbar-dropdown-menu {
+        top: calc(100% + 10px);
+        left: 0;
+        transform: translateX(0) translateY(8px);
+        min-width: 180px;
+      }
+
+      .taskbar-dropdown:hover .taskbar-dropdown-menu,
+      .taskbar-dropdown:focus-within .taskbar-dropdown-menu,
+      .taskbar-dropdown.open .taskbar-dropdown-menu {
+        transform: translateX(0) translateY(0);
+      }
+
+      #skills-section { padding: 4.5rem 1.2rem; }
+      .sub-main { font-size: 28px; }
+      .sub-expertise { font-size: 12px; }
+      .logo-card { width: 78px; height: 78px; border-radius: 18px; padding: 8px; }
+      .logos-row { gap: 1.5rem; }
+      .logo-label { font-size: 0.8rem; margin-top: 14px; max-width: 120px; }
+      .tooltip { width: 220px; top: calc(100% + 56px); }
+      .tooltip-inner { padding: 14px 15px; }
+      .tooltip-name { font-size: 0.92rem; }
+      .tooltip-desc { font-size: 0.82rem; }
+      .hover-note { font-size: 0.78rem; margin-top: 1.6rem; }
+
+      #work-section { padding: 4.2rem 1rem 5.2rem; }
+      .work-top { font-size: 12px; }
+      .work-main { font-size: 28px; }
+      .embedded-work-heading .work-top { font-size: 12px; }
+      .embedded-work-heading .work-main { font-size: 28px; }
+      .work-tabs {
+        justify-content: flex-start;
+      }
+      .work-tab {
+        font-size: 0.74rem;
+      }
+      .work-note { font-size: 0.82rem; }
+      .embedded-work-stack { margin-top: 2rem; gap: 1.4rem; }
+      .embedded-work-card { border-radius: 0; }
+
+      .commercial-center-title {
+        font-size: 1.02rem;
+      }
+
+      .commercial-center-note {
+        font-size: 0.9rem;
+      }
+    }
+
+    /* RESUME SECTION */
+    #resume-section {
+      min-height: 100vh;
+      padding: 5rem 2rem 7rem;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .resume-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-family: Inter, sans-serif;
+    }
+
+    .resume-top {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease-in-out infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .resume-main {
+      font-size: 44px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+
+    .resume-bubbles {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 560px));
+      gap: 32px;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .resume-bubble-wrapper {
+      position: relative;
+      width: 100%;
+      height: 300px;
+    }
+
+    .resume-bubble {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100%;
+      height: 300px;
+      padding: 32px 36px;
+      box-sizing: border-box;
+      border-radius: 32px;
+      backdrop-filter: blur(14px);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        inset 0 0 12px rgba(255,255,255,0.15),
+        0 15px 35px rgba(0,0,0,0.45);
+      cursor: inherit;
+      transition: transform 0.3s ease, background 0.3s ease;
+      z-index: 2;
+      color: #fff;
+      font-family: Inter, sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    #rbw-5 {
+      grid-column: 1 / -1;
+      justify-self: center;
+      max-width: 560px;
+    }
+
+    #rbw-5 .resume-bubble {
+      text-align: center;
+    }
+
+    .resume-job-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      background: linear-gradient(120deg, #ffffff, #dbeafe, #a5b4fc, #c084fc, #f9a8d4, #a5b4fc, #dbeafe, #ffffff);
+      background-size: 300% 300%;
+      animation: gradientMove 6s ease-in-out infinite;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .resume-company {
+      font-size: 15px;
+      opacity: 0.72;
+      margin-bottom: 12px;
+      letter-spacing: 0.04em;
+    }
+
+    .resume-description {
+      font-size: 15px;
+      line-height: 1.65;
+      opacity: 0.88;
+    }
+
+    .resume-orbit-img {
+      display: none;
+      position: absolute;
+      width: 54px;
+      height: 54px;
+      border-radius: 50%;
+      object-fit: cover;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      border: 1.5px solid rgba(255,255,255,0.3);
+    }
+
+    @media (max-width: 900px) {
+      .resume-bubbles { grid-template-columns: 1fr; }
+      .resume-bubble-wrapper { width: 90vw; height: 300px; }
+      .resume-bubble { width: 90vw; height: 300px; position: relative; top: unset; left: unset; transform: none; }
+    }
+
+    @media (max-width: 600px) {
+      #resume-section { padding: 4rem 1rem 5rem; }
+      .resume-main { font-size: 30px; }
+      .resume-top { font-size: 14px; }
+      .resume-job-title { font-size: 17px; }
+      .resume-description { font-size: 13px; }
+    }
+
+    /* CONTACT SECTION */
+    #contact-section {
+      min-height: 100vh;
+      padding: 5rem 2rem 8rem;
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .contact-heading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 3rem;
+      font-family: Inter, sans-serif;
+    }
+
+    .contact-top {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      background: linear-gradient(
+        120deg,
+        #ffffff,
+        #dbeafe,
+        #a5b4fc,
+        #c084fc,
+        #f9a8d4,
+        #a5b4fc,
+        #dbeafe,
+        #ffffff
+      );
+      background-size: 300% 300%;
+      animation: gradientMove 18s ease-in-out infinite;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .contact-main {
+      font-size: 46px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #ffffff;
+    }
+
+    .contact-ombre-bubble {
+      width: min(980px, 100%);
+      min-height: 520px;
+      border-radius: 56px;
+      padding: 4rem 4.5rem;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.8rem;
+      text-align: center;
+      color: #ffffff;
+      background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0.12) 0%,
+        rgba(219,234,254,0.18) 20%,
+        rgba(165,180,252,0.2) 40%,
+        rgba(192,132,252,0.16) 62%,
+        rgba(249,168,212,0.12) 82%,
+        rgba(255,255,255,0.12) 100%
+      );
+      backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(255,255,255,0.22);
+      box-shadow:
+        inset 0 0 26px rgba(255,255,255,0.12),
+        0 30px 70px rgba(0,0,0,0.35),
+        0 0 90px rgba(192,132,252,0.14);
+    }
+
+    .contact-ombre-bubble::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background: radial-gradient(circle at 18% 18%, rgba(255,255,255,0.16), transparent 26%),
+                  radial-gradient(circle at 78% 22%, rgba(219,234,254,0.22), transparent 30%),
+                  radial-gradient(circle at 58% 78%, rgba(165,180,252,0.2), transparent 34%),
+                  radial-gradient(circle at 35% 60%, rgba(249,168,212,0.12), transparent 28%);
+      animation: gradientMove 18s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .contact-ombre-bubble > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-intro {
+      width: min(760px, 100%);
+      max-width: 760px;
+      font-family: Inter, sans-serif;
+      font-size: 1.34rem;
+      font-weight: 400;
+      line-height: 1.75;
+      letter-spacing: 0.01em;
+      color: rgba(255,255,255,0.84);
+      margin-top: -0.3rem;
+    }
+
+    .contact-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+      margin-top: 0.2rem;
+      width: min(560px, 100%);
+      font-family: Inter, sans-serif;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.4rem;
+      padding: 1rem 1.2rem;
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(10px);
+    }
+
+    .contact-item-left {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.85rem;
+      min-width: 0;
+    }
+
+    .contact-icon {
+      width: 22px;
+      height: 22px;
+      color: rgba(255,255,255,0.88);
+      flex: 0 0 auto;
+      filter: drop-shadow(0 0 10px rgba(249,168,212,0.18));
+    }
+
+    .contact-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.62);
+      flex: 0 0 auto;
+    }
+
+    .contact-line {
+      font-size: 1.28rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      color: #ffffff;
+      text-decoration: none;
+      text-align: right;
+      word-break: break-word;
+    }
+
+    .contact-email {
+      font-size: 1.08rem;
+      font-weight: 400;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .contact-line.secondary {
+      font-size: 1.18rem;
+      font-weight: 500;
+      color: rgba(255,255,255,0.88);
+    }
+
+    .linkedin-contact-btn {
+      margin-top: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 16px 34px;
+      border-radius: 999px;
+      text-decoration: none;
+      color: #ffffff;
+      font-family: Inter, sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(12px);
+      transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+
+    .linkedin-contact-btn:hover {
+      transform: translateY(-2px) scale(1.03);
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 16px 36px rgba(0,0,0,0.28);
+    }
+
+    @media (max-width: 900px) {
+      .contact-main { font-size: 36px; }
+      .contact-top { font-size: 16px; }
+      .contact-ombre-bubble {
+        min-height: 460px;
+        padding: 3.2rem 2.4rem;
+        border-radius: 42px;
+      }
+      .contact-item {
+        padding: 0.95rem 1rem;
+        gap: 1rem;
+      }
+      .contact-icon {
+        width: 20px;
+        height: 20px;
+      }
+      .contact-line { font-size: 1.1rem; }
+      .contact-line.secondary { font-size: 1rem; }
+    }
+
+    @media (max-width: 600px) {
+      #contact-section { padding: 4rem 1rem 6rem; }
+      .contact-main { font-size: 28px; }
+      .contact-top { font-size: 13px; }
+      .contact-ombre-bubble {
+        min-height: 420px;
+        padding: 2.6rem 1.4rem;
+        border-radius: 32px;
+      }
+      .contact-intro {
+        font-size: 1.2rem;
+      }
+      .contact-items { width: 100%; }
+      .contact-item {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+      }
+      .contact-item-left {
+        width: 100%;
+      }
+      .contact-label { font-size: 0.76rem; }
+      .contact-line {
+        font-size: 1.04rem;
+        text-align: left;
+      }
+      .contact-line.secondary { font-size: 0.98rem; }
+      .linkedin-contact-btn {
+        width: 100%;
+        max-width: 280px;
+        font-size: 0.92rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <canvas id="galaxyCanvas"></canvas>
+
+  <div class="taskbar">
+    <a href="#home-section">Home</a>
+    <a href="#about-section">About</a>
+    <a href="#skills-section">Skills</a>
+    <div class="taskbar-dropdown" id="workDropdown">
+      <button class="taskbar-dropdown-trigger" id="workDropdownTrigger" type="button" aria-expanded="false" aria-controls="workDropdownMenu">Work</button>
+      <div class="taskbar-dropdown-menu" id="workDropdownMenu">
+        <a href="#work-section">Work</a>
+        <a href="#work-photography-embed">Photography</a>
+        <a href="#work-graphics-embed">Graphics</a>
+      </div>
+    </div>
+    <a href="#resume-section">Resume</a>
+    <a href="#contact-section">Contact</a>
+  </div>
+
+  <div class="content" id="home-section">
+    <div class="hero">
+      <div>
+        <div class="hero-title">
+          <div class="hero-top">creative &amp;</div>
+          <div class="hero-bottom">marketing</div>
+        </div>
+        <p class="hero-subtext">I'm Julia, I'm passionate about creative design, marketing, and photography, and this portfolio highlights the work, experience, and skills I've developed.</p>
+        <div class="button-row">
+          <!-- CONNECT BUTTON -->
+          <div class="btn-wrapper" id="connectWrap">
+            <div class="magic-btn" id="connectBtn">Connect with me</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="scroll-indicator" id="scrollIndicator">
+    <div class="scroll-indicator-text">Scroll</div>
+    <svg class="scroll-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </div>
+
+  <section id="about-section">
+    <div id="orbit-widget">
+      <!-- LEFT COLUMN: TITLE + TEXT BUBBLE -->
+      <div style="display: flex; flex-direction: column; align-items: flex-start; gap: 2rem; justify-content: center; min-height: 600px; flex: 1;">
+        <div class="portfolio-heading">
+          <div class="portfolio-top">More</div>
+          <div class="portfolio-bottom">About me</div>
+        </div>
+
+        <!-- ABOUT TEXT BUBBLE -->
+        <div class="bubble" id="bubble">
+          <div class="about-text">
+            Graduating this May from the University of Wisconsin Milwaukee with a Bachelor of Business Administration in Marketing, I've spent the past few years building a strong foundation in both creative and strategic work.
+            <br><br>
+            I'm drawn to all kinds of marketing design: brand visuals, social graphics, photography, layout work, anything that blends creativity with strategy. Over the past three years, I've worked in the construction industry, first as a proposals intern and then as a marketing intern. That experience taught me how to work within brand guidelines, collaborate across teams, and understand everything that comes with corporate marketing.
+            <br><br>
+            Outside of design, coaching volleyball at Shorewood became one of the most meaningful parts of my college experience. Working with both middle school and high school athletes taught me patience, leadership, and how to show up for people, which enhances my everyday work.
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: HEADSHOT -->
+      <div class="hero-headshot-wrapper" style="align-self: center;">
+        <img class="hero-headshot"
+             src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4bc7eb0a-7c27-4167-bfd2-af42ef625b67.jpg?e=webp"
+             alt="Julia Headshot">
+      </div>
+    </div>
+  </section>
+  <!-- SKILLS & SOFTWARE SECTION -->
+  <section id="skills-section">
+    <div class="subheading">
+      <div class="sub-expertise">Experienced Software</div>
+      <div class="sub-main">Skills &amp; Tools</div>
+    </div>
+    <div class="logos-row">
+      <!-- Premiere -->
+      <div class="logo-item" style="--brand:#9999FF;" tabindex="0" role="button" aria-label="Adobe Premiere Pro details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#9999FF"/><text x="50" y="68" text-anchor="middle" font-size="44" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#00001A">Pr</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(153,153,255,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(153,153,255,0.55)">
+              <div class="tooltip-name" style="color:#9999FF">Adobe Premiere Pro</div>
+              <div class="tooltip-divider" style="color:#9999FF"></div>
+              <div class="tooltip-desc">Basic video editing skills, transitions, colour correction and timeline management.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #9999FF"></div>
+          </div>
+        </div>
+        <div class="logo-label">Premiere</div>
+      </div>
+      <!-- Photoshop -->
+      <div class="logo-item" style="--brand:#31A8FF;" tabindex="0" role="button" aria-label="Adobe Photoshop details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#31A8FF"/><text x="50" y="68" text-anchor="middle" font-size="44" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#000C1A">Ps</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(49,168,255,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(49,168,255,0.55)">
+              <div class="tooltip-name" style="color:#31A8FF">Adobe Photoshop</div>
+              <div class="tooltip-divider" style="color:#31A8FF"></div>
+              <div class="tooltip-desc">Photo retouching, background removal, compositing and digital manipulation.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #31A8FF"></div>
+          </div>
+        </div>
+        <div class="logo-label">Photoshop</div>
+      </div>
+      <!-- InDesign -->
+      <div class="logo-item" style="--brand:#FF3366;" tabindex="0" role="button" aria-label="Adobe InDesign details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#FF3366"/><text x="50" y="68" text-anchor="middle" font-size="44" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#1A0008">Id</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(255,51,102,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(255,51,102,0.55)">
+              <div class="tooltip-name" style="color:#FF3366">Adobe InDesign</div>
+              <div class="tooltip-divider" style="color:#FF3366"></div>
+              <div class="tooltip-desc">Print layout design, editorial spreads, typographic hierarchy and brand collateral.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #FF3366"></div>
+          </div>
+        </div>
+        <div class="logo-label">InDesign</div>
+      </div>
+      <!-- Lightroom -->
+      <div class="logo-item" style="--brand:#31C5F0;" tabindex="0" role="button" aria-label="Adobe Lightroom details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#31C5F0"/><text x="50" y="68" text-anchor="middle" font-size="44" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#001519">Lr</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(49,197,240,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(49,197,240,0.55)">
+              <div class="tooltip-name" style="color:#31C5F0">Adobe Lightroom</div>
+              <div class="tooltip-divider" style="color:#31C5F0"></div>
+              <div class="tooltip-desc">Photo colour grading, exposure correction, batch editing and preset creation.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #31C5F0"></div>
+          </div>
+        </div>
+        <div class="logo-label">Lightroom</div>
+      </div>
+      <!-- Canva -->
+      <div class="logo-item" style="--brand:#00C4CC;" tabindex="0" role="button" aria-label="Canva details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="50" fill="#00C4CC"/><text x="50" y="67" text-anchor="middle" font-size="40" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#fff">C</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(0,196,204,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(0,196,204,0.55)">
+              <div class="tooltip-name" style="color:#00C4CC">Canva</div>
+              <div class="tooltip-divider" style="color:#00C4CC"></div>
+              <div class="tooltip-desc">Social media graphics, marketing decks, brand templates and visual content creation.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #00C4CC"></div>
+          </div>
+        </div>
+        <div class="logo-label">Canva</div>
+      </div>
+      <!-- Figma -->
+      <div class="logo-item" style="--brand:#A259FF;" tabindex="0" role="button" aria-label="Figma details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100">
+              <rect width="100" height="100" rx="18" fill="#1E1E1E"/>
+              <rect x="38" y="18" width="24" height="24" rx="12" fill="#F24E1E"/>
+              <rect x="38" y="42" width="24" height="24" rx="0" fill="#FF7262"/>
+              <rect x="14" y="18" width="24" height="24" rx="12" fill="#A259FF"/>
+              <circle cx="62" cy="54" r="12" fill="#1ABCFE"/>
+              <rect x="14" y="42" width="24" height="24" rx="12" fill="#0ACF83"/>
+            </svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(162,89,255,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(162,89,255,0.55)">
+              <div class="tooltip-name" style="color:#A259FF">Figma</div>
+              <div class="tooltip-divider" style="color:#A259FF"></div>
+              <div class="tooltip-desc">UI/UX wireframing, interactive prototyping, component libraries and design systems.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #A259FF"></div>
+          </div>
+        </div>
+        <div class="logo-label">Figma</div>
+      </div>
+      <!-- Readymag -->
+      <div class="logo-item" style="--brand:#FF6B35;" tabindex="0" role="button" aria-label="Readymag details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#0A0A0A"/><text x="50" y="62" text-anchor="middle" font-size="26" font-weight="800" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#FF6B35">RM</text></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(255,107,53,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(255,107,53,0.55)">
+              <div class="tooltip-name" style="color:#FF6B35">Readymag</div>
+              <div class="tooltip-divider" style="color:#FF6B35"></div>
+              <div class="tooltip-desc">Web publishing, interactive digital magazines and scroll-based storytelling.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #FF6B35"></div>
+          </div>
+        </div>
+        <div class="logo-label">Readymag</div>
+      </div>
+      <!-- GitHub -->
+      <div class="logo-item" style="--brand:#f0f6fc;" tabindex="0" role="button" aria-label="GitHub details">
+        <div class="floater">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#0d1117"/><path d="M50 18C32.3 18 18 32.3 18 50c0 14.2 9.2 26.3 22 30.6 1.6.3 2.2-.7 2.2-1.5 0-.8 0-2.8-.1-5.5-8.9 1.9-10.8-4.3-10.8-4.3-1.5-3.7-3.6-4.7-3.6-4.7-2.9-2 .2-2 .2-2 3.2.2 4.9 3.3 4.9 3.3 2.9 4.9 7.5 3.5 9.3 2.7.3-2.1 1.1-3.5 2-4.3-7.1-.8-14.6-3.6-14.6-15.9 0-3.5 1.3-6.4 3.3-8.6-.3-.8-1.4-4.1.3-8.5 0 0 2.7-.9 8.8 3.3 2.5-.7 5.3-1 8-1 2.7 0 5.5.4 8 1 6.1-4.1 8.8-3.3 8.8-3.3 1.7 4.4.6 7.7.3 8.5 2.1 2.2 3.3 5.1 3.3 8.6 0 12.3-7.5 15-14.7 15.8 1.2 1 2.2 3 2.2 6.1 0 4.4-.1 7.9-.1 9 0 .9.6 1.9 2.2 1.5C72.8 76.3 82 64.2 82 50 82 32.3 67.7 18 50 18z" fill="#f0f6fc"/></svg>
+          </div>
+          <div class="tooltip">
+            <div class="tooltip-inner" style="border:1px solid rgba(240,246,252,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 20px rgba(240,246,252,0.55)">
+              <div class="tooltip-name" style="color:#f0f6fc">GitHub</div>
+              <div class="tooltip-divider" style="color:#f0f6fc"></div>
+              <div class="tooltip-desc">Understanding and application of GitHub Codespaces coding workflows.</div>
+            </div>
+            <div class="tooltip-arrow" style="border-top:7px solid #f0f6fc"></div>
+          </div>
+        </div>
+        <div class="logo-label">GitHub</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work-section">
+    <div class="embedded-work-stack">
+      <article class="embedded-work-block" id="work-photography-embed">
+        <div class="work-heading embedded-work-heading">
+          <div class="work-top">Creative Portfolio</div>
+          <div class="work-main">Photography</div>
+        </div>
+        <div class="commercial-orbit-wrap" aria-label="Commercial photography highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open commercial photo one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-0ce15cf2-97c7-41f9-9c60-0c620aaecead.png" alt="Commercial project photo one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open commercial photo two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4abd4b05-3df0-4220-b84e-56da6d40d815.jpg" alt="Commercial project photo two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open commercial photo three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f972fbf5-0195-46ea-9ee1-0b9e4fc7dc97.jpg" alt="Commercial project photo three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open commercial photo four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-0a064e2a-d40d-423c-bcd8-4a6f1b70c9b4.png" alt="Commercial project photo four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open commercial photo five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-3acd0378-c38d-452d-a44d-d48c5b20766a.jpg" alt="Commercial project photo five">
+          </button>
+          <button class="commercial-orbit-shot s6" type="button" aria-label="Open commercial photo six">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-28563255-5229-4c83-b72d-ea27d5721e33.jpg" alt="Commercial project photo six">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Commercial Photography</span>
+            <span class="commercial-center-note">As a marketing intern at Boldt, I captured project photography to expand the company's digital asset library. This work showcases my commercial photography skills and hands-on experience.</span>
+          </button>
+        </div>
+
+        <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Community photography highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open community photo one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-0d062621-3c3d-4843-9598-2a9cce19ab5f.jpg" alt="Community photo one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open community photo two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-5b2890fc-b6c5-4bfc-98eb-aa53b3cac4e3.jpg" alt="Community photo two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open community photo three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f16c6d15-297c-4b39-a1b3-c899a083e686.jpg" alt="Community photo three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open community photo four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-a69e2e39-fe7d-4b6a-a44d-41bc6cb59df3.jpg" alt="Community photo four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open community photo five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4c5688bd-683e-4962-a162-cde3b4340717.jpg" alt="Community photo five">
+          </button>
+          <button class="commercial-orbit-shot s6" type="button" aria-label="Open community photo six">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-cf77198a-b055-44da-b3a5-c5a296e05095.jpg" alt="Community photo six">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Community Photography</span>
+            <span class="commercial-center-note">These photos focus on local events and neighborhood moments, highlighting real people and shared experiences.</span>
+          </button>
+        </div>
+
+        <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Sports photography highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open sports photo one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-92d47422-1003-4dea-8dc2-6c01683f3f41.png" alt="Sports photo one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open sports photo two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-181e4c14-42db-4f0e-bf86-877632666750.png" alt="Sports photo two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open sports photo three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7347b376-f662-4e3e-843e-51fa6b0b4da1.jpg" alt="Sports photo three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open sports photo four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-3e76d40d-963a-4dfd-9369-6bbc1a611988.png" alt="Sports photo four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open sports photo five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f2670c1e-7091-4b5c-a130-1560b61f898d.png" alt="Sports photo five">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Sports Photography</span>
+            <span class="commercial-center-note">This section features action photography captured during my volunteer work with the Menasha Macs baseball team, where I photographed live game moments.</span>
+          </button>
+        </div>
+      </article>
+
+      <article class="embedded-work-block" id="work-graphics-embed">
+        <div class="work-heading embedded-work-heading">
+          <div class="work-top">Creative Portfolio</div>
+          <div class="work-main">Graphics</div>
+        </div>
+        <div class="commercial-orbit-wrap" aria-label="Print and template graphics highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open print graphic one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-582c42e2-967b-409c-ad6b-adaa3da58d6f.jpg" alt="Print graphic one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open print graphic two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-607eb387-d717-4eef-aa0c-b3eefc86d639.jpg" alt="Print graphic two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open print graphic three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-b806c223-cacd-4bc3-9779-5b9c1a6ad96a.jpg" alt="Print graphic three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open print graphic four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7cb73d45-c6f9-4d94-8506-7fb44baf9709.jpg" alt="Print graphic four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open print graphic five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f5220752-c559-4075-9410-5beb2cd83eed.jpg" alt="Print graphic five">
+          </button>
+          <button class="commercial-orbit-shot s6" type="button" aria-label="Open print graphic six">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-de0ab2f3-c0d2-4f66-9462-0684ac7662e0.jpg" alt="Print graphic six">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Print and Template Graphics</span>
+            <span class="commercial-center-note">Print and template-ready assets designed for announcements, recruiting, branding, and business development.</span>
+          </button>
+        </div>
+
+
+        <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Advertisement graphics highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open advertisement graphic one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-5e5a6b65-372c-473e-9a5e-6e02adb9cfd7.png" alt="Advertisement graphic one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open advertisement graphic two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-2cbbfffe-392b-4df8-8475-fa3e4f14b2d0.jpg" alt="Advertisement graphic two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open advertisement graphic three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-91cee057-fbb3-4894-98dc-bec3fe30fe66.jpg" alt="Advertisement graphic three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open advertisement graphic four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-eca194a2-1437-42e3-96cc-ed723ebdc8b1.jpg" alt="Advertisement graphic four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open advertisement graphic five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-844d201e-f385-482a-8440-ae8d2c34c829.png" alt="Advertisement graphic five">
+          </button>
+          <button class="commercial-orbit-shot s6" type="button" aria-label="Open advertisement graphic six">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-91e4b4a7-1377-4e5e-a152-010d2a9a0afc.jpg" alt="Advertisement graphic six">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Advertisement Graphics</span>
+            <span class="commercial-center-note">Graphic advertisements created for Boldt, focused on clear messaging, brand consistency, and campaign-ready visuals.</span>
+          </button>
+        </div>
+
+        <div class="commercial-orbit-wrap photo-orbit-group campaign-orbit-four" aria-label="Campaign graphics highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open campaign graphic one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-e97237a9-14ea-429d-a0a1-7a2d761eee64.jpg" alt="135 Thanks logo" style="mix-blend-mode: multiply;">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open campaign graphic two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4c5c1d63-285b-4b90-b4a3-dcd42116d00a.png" alt="Mile of Music signage graphic">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open campaign graphic three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-fdf87fce-d02a-4db6-8479-cb73eb9f7c70.jpg" alt="135 Thanks campaign package">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open campaign graphic four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7e0dc7a9-5b29-49d4-a864-ccea02b2fa8e.jpg" alt="Campaign graphic four">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Campaign Graphics</span>
+            <span class="commercial-center-note"><strong>Campaign design packages including lead visuals, signage, and supporting assets.</strong> The graphics on the left are a package for the 135 Thanks campaign, and the graphics on the right are from a Mile of Music campaign where I created a giant poster design for Boldt's support.</span>
+          </button>
+        </div>
+
+        <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Sport graphics highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open sport graphic one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-56ed0cec-ee14-46fe-a87d-9837c25d27ec.jpg" alt="Sport graphic one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open sport graphic two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7ba1dabc-25ad-40af-9654-07f398a2e117.jpg" alt="Sport graphic two">
+          </button>
+          <button class="commercial-orbit-shot s3" type="button" aria-label="Open sport graphic three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-61f7a19b-a605-4bc3-aa70-282185d6a5aa.jpg" alt="Sport graphic three">
+          </button>
+          <button class="commercial-orbit-shot s4" type="button" aria-label="Open sport graphic four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-3e904fae-7306-4c24-a0e9-6bd5f812b5f8.jpg" alt="Sport graphic four">
+          </button>
+          <button class="commercial-orbit-shot s5" type="button" aria-label="Open sport graphic five">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-4b6b6cef-6d0c-4923-8a54-50e011253adb.jpg" alt="Sport graphic five">
+          </button>
+          <button class="commercial-orbit-shot s6" type="button" aria-label="Open sport graphic six">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-c8c67f6d-633f-4fed-a534-3640d4159e60.jpg" alt="Sport graphic six">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Sport Graphics</span>
+            <span class="commercial-center-note">Sports-focused graphics built for game-day storytelling and announcements using photos I captured.</span>
+          </button>
+        </div>
+      </article>
+    </div>
+
+  </section>
+
+  <div class="photo-bubble-modal" id="commercialPhotographyModal" aria-hidden="true">
+    <div class="photo-bubble-panel" role="dialog" aria-modal="true" aria-label="Commercial photo full screen view">
+      <button class="photo-bubble-close" id="commercialPhotographyClose" type="button" aria-label="Close commercial photography">×</button>
+      <img class="photo-bubble-view-image" id="commercialPhotoModalImage" src="" alt="Commercial project photo full screen view">
+    </div>
+  </div>
+
+  <!-- RESUME SECTION -->
+  <section id="resume-section">
+    <div class="resume-heading">
+      <div class="resume-top">Experience</div>
+      <div class="resume-main">Resume</div>
+    </div>
+
+    <div class="resume-bubbles">
+
+      <!-- Bubble 1 -->
+      <div class="resume-bubble-wrapper" id="rbw-1">
+        <div class="resume-bubble">
+          <div class="resume-job-title">Marketing Intern</div>
+          <div class="resume-company">Boldt Construction, Appleton, WI &bull; May 2024 &ndash; Aug 2025</div>
+          <div class="resume-description">Worked in Adobe Creative Cloud and Microsoft Suite to create branded social, email, print, and photography content, collaborated across teams, and contributed fresh ideas for upcoming marketing initiatives.</div>
+        </div>
+      </div>
+
+      <!-- Bubble 2 -->
+      <div class="resume-bubble-wrapper" id="rbw-2">
+        <div class="resume-bubble">
+          <div class="resume-job-title">Proposals/Graphics Intern</div>
+          <div class="resume-company">Kiewit Construction, Lone Tree, CO &bull; Jun 2023 &ndash; Jul 2023</div>
+          <div class="resume-description">Supported proposal submissions by gathering cross-team information, helping develop technical content and narratives, joining strategy meetings, and improving templates and standardized language.</div>
+        </div>
+      </div>
+
+      <!-- Bubble 3 -->
+      <div class="resume-bubble-wrapper" id="rbw-3">
+        <div class="resume-bubble">
+          <div class="resume-job-title">Volleyball Coach</div>
+          <div class="resume-company">Shorewood School District, Milwaukee, WI &bull; Aug 2023 &ndash; Dec 2025</div>
+          <div class="resume-description">Coached middle and high school volleyball teams, led structured practices for different skill levels, developed game strategy, and communicated with players, parents, and school staff.</div>
+        </div>
+      </div>
+
+      <!-- Bubble 4 -->
+      <div class="resume-bubble-wrapper" id="rbw-4">
+        <div class="resume-bubble">
+          <div class="resume-job-title">Social Media &amp; Photography Volunteer</div>
+          <div class="resume-company">Menasha Macs Baseball Organization, Menasha, WI &bull; May 2025 &ndash; Sep 2025</div>
+          <div class="resume-description">Captured in-game photography, designed graphics and announcements, managed social posts, and built a branding kit plus reusable templates to support consistent future content.</div>
+        </div>
+      </div>
+
+      <!-- Bubble 5 -->
+      <div class="resume-bubble-wrapper" id="rbw-5">
+        <div class="resume-bubble">
+          <div class="resume-job-title">TikTok Shop Research &amp; UGC Study</div>
+          <div class="resume-company">TikTok Shop Affiliate Program, Independent Research &bull; Oct 2025 &ndash; Present</div>
+          <div class="resume-description">Research UGC trends, algorithm behavior, and audience patterns, test short-form video strategy, and generated $55.1K+ GMV in the first four months through affiliate content.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="contact-section">
+    <div class="contact-heading">
+      <div class="contact-top">Get In Touch</div>
+      <div class="contact-main">Contact Me</div>
+    </div>
+
+    <div class="contact-ombre-bubble">
+      <p class="contact-intro">I would love to connect about creative design, marketing opportunities, photography work, or future collaborations.</p>
+
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-item-left">
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 6h16v12H4z"></path>
+              <path d="m4 8 8 6 8-6"></path>
+            </svg>
+            <span class="contact-label">Email</span>
+          </div>
+          <a class="contact-line contact-email" href="mailto:Julia.lukasik10111@gmail.com">Julia.lukasik10111@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <div class="contact-item-left">
+            <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.18 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.12.9.35 1.78.68 2.62a2 2 0 0 1-.45 2.11L8.07 9.93a16 16 0 0 0 6 6l1.48-1.27a2 2 0 0 1 2.11-.45c.84.33 1.72.56 2.62.68A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span class="contact-label">Phone</span>
+          </div>
+          <a class="contact-line secondary" href="tel:4702614017">470-261-4017</a>
+        </div>
+        <a class="linkedin-contact-btn" href="https://www.linkedin.com/in/julia-lukasik-098a89263" target="_blank" rel="noopener noreferrer">
+          <span>View LinkedIn Profile</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FULL PAGE FLOATING ICONS -->
+  <div id="full-page-orbit">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-326eb6a2-da3a-41fd-abd1-66fcf2111a72.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="250" data-speed="0.0003" data-start-angle="3.5">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-e0f1763a-b090-4b4c-8bb8-f78af5f85c35.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="260" data-speed="0.0002" data-start-angle="0.3">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-26485f1c-027e-465f-8a8e-e4d0d6268c73.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="240" data-speed="0.00025" data-start-angle="5.5">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-326eb6a2-da3a-41fd-abd1-66fcf2111a72.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="270" data-speed="0.00015" data-start-angle="2">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-e0f1763a-b090-4b4c-8bb8-f78af5f85c35.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="280" data-speed="0.0002" data-start-angle="4">
+        <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-26485f1c-027e-465f-8a8e-e4d0d6268c73.png?e=webp&amp;nll=true"
+         class="orbit-image" data-radius="230" data-speed="0.00018" data-start-angle="1.5">
+  </div>
+
+  <script>
+    /* ---------------------------
+       SETUP
+    ---------------------------- */
+    const canvas = document.getElementById("galaxyCanvas");
+    const ctx = canvas.getContext("2d");
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    /* ---------------------------
+       STAR FIELD
+    ---------------------------- */
+    const numStars = 400;
+    const stars = [];
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        z: Math.random() * 1000,
+        size: Math.random() * 2,
+        speedX: (Math.random() - 0.5) * 0.15,
+        speedY: (Math.random() - 0.5) * 0.15
+      });
+    }
+
+    /* ---------------------------
+       SHOOTING STARS (softened)
+    ---------------------------- */
+    const shootingStars = [];
+    let contactSectionActive = false;
+
+    function createShootingStar() {
+      const intensityBoost = contactSectionActive ? 1.45 : 1;
+      shootingStars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height * (contactSectionActive ? 0.8 : 0.4),
+        length: (40 + Math.random() * 40) * intensityBoost,
+        speed: (4 + Math.random() * 2) * (contactSectionActive ? 1.2 : 1),
+        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+        opacity: 1,
+        fadeRate: contactSectionActive ? 0.006 : 0.01
+      });
+    }
+
+    setInterval(() => {
+      if (contactSectionActive) {
+        const burstCount = 2 + Math.floor(Math.random() * 3);
+        for (let i = 0; i < burstCount; i++) {
+          if (Math.random() < 0.9) createShootingStar();
+        }
+      } else if (Math.random() < 0.2) {
+        createShootingStar();
+      }
+    }, 900);
+
+    /* ---------------------------
+       ANIMATION LOOP
+    ---------------------------- */
+    function animate() {
+      // Soft galaxy background
+      const gradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 0,
+        canvas.width / 2, canvas.height / 2, canvas.width * 0.9
+      );
+      gradient.addColorStop(0, "rgba(30, 20, 45, 1)");
+      gradient.addColorStop(0.55, "rgba(18, 14, 28, 1)");
+      gradient.addColorStop(1, "rgba(5, 5, 15, 1)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      /* ---- Stars ---- */
+      stars.forEach(star => {
+        star.x += star.speedX;
+        star.y += star.speedY;
+
+        if (star.x < 0) star.x = canvas.width;
+        if (star.x > canvas.width) star.x = 0;
+        if (star.y < 0) star.y = canvas.height;
+        if (star.y > canvas.height) star.y = 0;
+
+        const depth = 1 - star.z / 1000;
+        const size = star.size * depth * 2;
+        const alpha = depth * 0.9;
+
+        // Color shift (purple → blue → white)
+        let r, g, b;
+        if (depth < 0.5) {
+          const t = depth / 0.5;
+          r = 138 * (1 - t) + 100 * t;
+          g = 43 * (1 - t) + 149 * t;
+          b = 226 * (1 - t) + 237 * t;
+        } else {
+          const t = (depth - 0.5) / 0.5;
+          r = 100 * (1 - t) + 255 * t;
+          g = 149 * (1 - t) + 255 * t;
+          b = 237 * (1 - t) + 255 * t;
+        }
+
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+        ctx.arc(star.x, star.y, size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Glow for bright stars
+        if (depth > 0.7) {
+          const glow = ctx.createRadialGradient(
+            star.x, star.y, 0,
+            star.x, star.y, size * 3
+          );
+          glow.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.3})`);
+          glow.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = glow;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, size * 3, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        star.z += 0.3;
+        if (star.z > 1000) star.z = 0;
+      });
+
+      /* ---- Shooting Stars ---- */
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const s = shootingStars[i];
+
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        s.opacity -= (s.fadeRate || 0.01);
+
+        if (s.opacity <= 0 || s.x > canvas.width || s.y > canvas.height) {
+          shootingStars.splice(i, 1);
+          continue;
+        }
+
+        const grad = ctx.createLinearGradient(
+          s.x, s.y,
+          s.x - Math.cos(s.angle) * s.length,
+          s.y - Math.sin(s.angle) * s.length
+        );
+
+        grad.addColorStop(0, `rgba(255,255,255,${s.opacity})`);
+        grad.addColorStop(0.5, `rgba(200,150,255,${s.opacity * 0.5})`);
+        grad.addColorStop(1, "rgba(255,255,255,0)");
+
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(
+          s.x - Math.cos(s.angle) * s.length,
+          s.y - Math.sin(s.angle) * s.length
+        );
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    const contactSection = document.getElementById("contact-section");
+    if (contactSection) {
+      const contactObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          contactSectionActive = entry.isIntersecting;
+        });
+      }, { threshold: 0.35 });
+
+      contactObserver.observe(contactSection);
+    }
+
+    (function() {
+      const dropdown = document.getElementById("workDropdown");
+      const trigger = document.getElementById("workDropdownTrigger");
+       const menu = document.getElementById("workDropdownMenu");
+       if (!dropdown || !trigger) return;
+
+       let closeTimeout;
+
+      function setExpanded(isOpen) {
+        dropdown.classList.toggle("open", isOpen);
+        trigger.setAttribute("aria-expanded", String(isOpen));
+         clearTimeout(closeTimeout);
+      }
+
+      trigger.addEventListener("click", (event) => {
+        event.stopPropagation();
+        setExpanded(!dropdown.classList.contains("open"));
+      });
+
+       dropdown.addEventListener("mouseenter", () => {
+         clearTimeout(closeTimeout);
+         setExpanded(true);
+       });
+
+       dropdown.addEventListener("mouseleave", () => {
+         closeTimeout = setTimeout(() => setExpanded(false), 150);
+       });
+
+       // Close when clicking on a menu item
+       if (menu) {
+         menu.addEventListener("click", (event) => {
+           if (event.target.tagName === "A") {
+             setExpanded(false);
+           }
+         });
+       }
+
+      document.addEventListener("click", (event) => {
+        if (!dropdown.contains(event.target)) {
+           clearTimeout(closeTimeout);
+          setExpanded(false);
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") {
+           clearTimeout(closeTimeout);
+          setExpanded(false);
+        }
+      });
+    })();
+
+    /* ---------------------------
+       BUTTON ANIMATIONS
+    ---------------------------- */
+    const iconCount = 6;
+    const radii = [50, 70, 90, 110, 130, 150];
+    const speeds = [0.03, 0.025, 0.02, 0.018, 0.015, 0.012];
+
+    const buttons = [
+      {
+        wrap: document.getElementById("connectWrap"),
+        btn: document.getElementById("connectBtn"),
+        type: "linkedin"
+      }
+    ];
+
+    const svgs = {
+      linkedin: `<path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>`,
+      star: `<path d="M12 .587l3.668 7.568L24 9.748l-6 5.848L19.335 24 12 19.897 4.665 24 6 15.596 0 9.748l8.332-1.593z"/>`,
+      circle: `<circle cx="12" cy="12" r="10" />`
+    };
+
+    buttons.forEach(group => {
+      if (!group.wrap || !group.btn) return;
+      group.icons = [];
+
+      for (let i = 0; i < iconCount; i++) {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.setAttribute("viewBox", "0 0 24 24");
+        svg.setAttribute("fill", "white");
+        svg.classList.add("orbit-icon");
+        svg.innerHTML = svgs[group.type];
+        group.wrap.appendChild(svg);
+
+        group.icons.push({
+          el: svg,
+          angle: Math.random() * Math.PI * 2,
+          radius: radii[i],
+          speed: speeds[i]
+        });
+      }
+
+      group.btn.addEventListener("mouseenter", () => {
+        group.icons.forEach(icon => icon.el.style.opacity = 1);
+      });
+
+      group.btn.addEventListener("mouseleave", () => {
+        group.icons.forEach(icon => icon.el.style.opacity = 0);
+      });
+    });
+
+    function animateButtons() {
+      buttons.forEach(group => {
+        group.icons.forEach(icon => {
+          icon.angle += icon.speed;
+          const x = Math.cos(icon.angle) * icon.radius;
+          const y = Math.sin(icon.angle) * icon.radius;
+          icon.el.style.left = `calc(50% + ${x}px)`;
+          icon.el.style.top = `calc(50% + ${y}px)`;
+        });
+      });
+      requestAnimationFrame(animateButtons);
+    }
+    animateButtons();
+
+    const connectBtn = document.getElementById("connectBtn");
+    if (connectBtn) {
+      connectBtn.onclick = () =>
+        window.open("https://www.linkedin.com/in/julia-lukasik-098a89263", "_blank");
+    }
+
+    // Resize embedded work pages so users can scroll one continuous main page.
+    (function() {
+      const embeddedFrames = document.querySelectorAll(".embedded-work-card iframe");
+      if (!embeddedFrames.length) return;
+
+      function resizeFrame(frame) {
+        try {
+          const doc = frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+          if (!doc || !doc.body || !doc.documentElement) return;
+          const bodyHeight = doc.body.scrollHeight;
+          const htmlHeight = doc.documentElement.scrollHeight;
+          frame.style.height = Math.max(bodyHeight, htmlHeight) + "px";
+        } catch (error) {
+          // Same-origin expected; keep fallback min-height if not accessible.
+        }
+      }
+
+      embeddedFrames.forEach((frame) => {
+        frame.addEventListener("load", () => {
+          resizeFrame(frame);
+          setTimeout(() => resizeFrame(frame), 250);
+        });
+      });
+
+      window.addEventListener("resize", () => {
+        embeddedFrames.forEach((frame) => resizeFrame(frame));
+      });
+    })();
+
+    /* ---------------------------
+       FULL PAGE FLOATING ICONS
+    ---------------------------- */
+    (function() {
+      const orbitContainer = document.getElementById("full-page-orbit");
+      const aboutSection = document.getElementById("about-section");
+      if (!orbitContainer || !aboutSection) return;
+      const images = orbitContainer.querySelectorAll(".orbit-image");
+      let aboutSectionVisible = false;
+
+      // Define positions within the about section bounds - in corners and edges
+      const iconPositions = [
+        { x: "5%", y: "18%" },              // Top-left
+        { x: "95%", y: "14%" },              // Top-right
+        { x: "8%", y: "85%" },              // Bottom-left
+        { x: "92%", y: "88%" },             // Bottom-right
+        { x: "10%", y: "50%" },             // Mid-left
+        { x: "90%", y: "45%" }              // Mid-right
+      ];
+
+      // Initialize each image with its own position
+      images.forEach((img, index) => {
+        const pos = iconPositions[index % iconPositions.length];
+        img.baseX = pos.x;
+        img.baseY = pos.y;
+        img.dataIndex = index;
+        // Stagger animation start times
+        img.style.animationDelay = (index * 0.5) + "s";
+      });
+
+      // IntersectionObserver to show icons only when about section is visible
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          aboutSectionVisible = entry.isIntersecting;
+        });
+      }, { threshold: 0.1 });
+
+      observer.observe(aboutSection);
+
+      function updateIconPositions() {
+        const aboutRect = aboutSection.getBoundingClientRect();
+        const aboutWidth = aboutRect.width;
+        const aboutHeight = aboutRect.height;
+        const aboutTop = aboutRect.top + window.scrollY;
+        const aboutLeft = aboutRect.left + window.scrollX;
+        
+        images.forEach((img, index) => {
+          // Calculate position within about section
+          const xPercent = parseFloat(img.baseX);
+          const yPercent = parseFloat(img.baseY);
+          
+          const x = aboutLeft + (aboutWidth * xPercent / 100);
+          const y = aboutTop + (aboutHeight * yPercent / 100);
+
+          img.style.position = "fixed";
+          img.style.left = x + "px";
+          img.style.top = y + "px";
+
+          // Apply twinkling animation only when about section is visible
+          if (aboutSectionVisible) {
+            img.style.opacity = "1";  // Animation handles opacity changes
+            img.style.pointerEvents = "none";
+          } else {
+            img.style.opacity = "0";
+            img.style.animation = "none";
+          }
+        });
+      }
+
+      // Update on scroll and resize
+      window.addEventListener("scroll", updateIconPositions);
+      window.addEventListener("resize", updateIconPositions);
+      
+      // Initial position
+      requestAnimationFrame(updateIconPositions);
+    })();
+
+    (function() {
+      const orbitGroups = document.querySelectorAll(".embedded-work-block .commercial-orbit-wrap");
+      if (!orbitGroups.length) return;
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          const shouldShow = entry.isIntersecting && entry.intersectionRatio > 0.33;
+          entry.target.classList.toggle("is-collapsed", !shouldShow);
+        });
+      }, {
+        threshold: [0, 0.2, 0.33, 0.5, 0.75],
+        rootMargin: "-8% 0px -8% 0px"
+      });
+
+      orbitGroups.forEach((group) => {
+        group.classList.add("is-collapsed");
+        observer.observe(group);
+      });
+    })();
+
+    (function() {
+      const modal = document.getElementById("commercialPhotographyModal");
+      const closeBtn = document.getElementById("commercialPhotographyClose");
+      const modalImage = document.getElementById("commercialPhotoModalImage");
+      const photoThumbs = document.querySelectorAll(".commercial-orbit-shot");
+      if (!modal || !closeBtn || !modalImage || !photoThumbs.length) return;
+
+      function openModal(src, alt) {
+        if (!src) return;
+        modalImage.src = src;
+        modalImage.alt = alt || "Commercial project photo full screen view";
+        modal.classList.add("open");
+        modal.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal() {
+        modal.classList.remove("open");
+        modal.setAttribute("aria-hidden", "true");
+        modalImage.src = "";
+        document.body.style.overflow = "";
+      }
+
+      photoThumbs.forEach((thumb) => {
+        thumb.addEventListener("click", () => {
+          const img = thumb.querySelector("img");
+          if (!img) return;
+          openModal(img.currentSrc || img.src, img.alt);
+        });
+      });
+
+      closeBtn.addEventListener("click", closeModal);
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeModal();
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal.classList.contains("open")) closeModal();
+      });
+    })();
+
+    /* ---------------------------
+       SCROLL INDICATOR
+    ---------------------------- */
+    const scrollIndicator = document.getElementById("scrollIndicator");
+    let hasScrolled = false;
+
+    if (scrollIndicator) {
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 100 && !hasScrolled) {
+          scrollIndicator.classList.add("hidden");
+          hasScrolled = true;
+        } else if (window.scrollY <= 100 && hasScrolled) {
+          scrollIndicator.classList.remove("hidden");
+          hasScrolled = false;
+        }
+      });
+    }
+
+    // Skills tooltips: enable click/tap and keyboard support beyond hover.
+    (function() {
+      const skillItems = document.querySelectorAll("#skills-section .logo-item");
+
+      function closeAll() {
+        skillItems.forEach(item => item.classList.remove("is-open"));
+      }
+
+      skillItems.forEach(item => {
+        item.addEventListener("click", (event) => {
+          const willOpen = !item.classList.contains("is-open");
+          closeAll();
+          if (willOpen) item.classList.add("is-open");
+          event.stopPropagation();
+        });
+
+        item.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            const willOpen = !item.classList.contains("is-open");
+            closeAll();
+            if (willOpen) item.classList.add("is-open");
+          }
+          if (event.key === "Escape") {
+            item.classList.remove("is-open");
+            item.blur();
+          }
+        });
+      });
+
+      document.addEventListener("click", (event) => {
+        if (!event.target.closest("#skills-section .logo-item")) {
+          closeAll();
+        }
+      });
+    })();
+
+
+  </script>
+</body>
+</html>
