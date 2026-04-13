@@ -1041,16 +1041,16 @@
       orbitPhotos.innerHTML = "";
 
       photos.slice(0, 6).forEach((photo, index) => {
-          const pos = photoPositions[index % photoPositions.length];
+        const pos = photoPositions[index % photoPositions.length];
         const btn = document.createElement("button");
         btn.type = "button";
         btn.className = "orbit-photo";
+        btn.style.setProperty("--x", `${pos.x}%`);
+        btn.style.setProperty("--y", `${pos.y}%`);
+        btn.style.setProperty("--float-duration", `${6 + (index % 3)}s`);
+        btn.style.animationDelay = `${index * 0.25}s`;
         if (category === "commercial") {
           btn.classList.add("commercial-large");
-          btn.style.setProperty("--x", `${pos.x}%`);
-          btn.style.setProperty("--y", `${pos.y}%`);
-          btn.style.setProperty("--float-duration", `${6 + (index % 3)}s`);
-          btn.style.animationDelay = `${index * 0.25}s`;
         }
         btn.setAttribute("aria-label", `Open ${photo.alt || "photo"} fullscreen`);
         btn.innerHTML = `<img src="${photo.src}" alt="${photo.alt || "Gallery photo"}">`;
