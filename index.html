@@ -1221,70 +1221,61 @@
     }
 
     @media (max-width: 600px) {
-      body { padding-top: 68px; }
+      body { padding-top: 64px; overflow-x: hidden; }
+      * { box-sizing: border-box; }
+      .content { max-width: 100%; overflow-x: hidden; padding: 0 0.75rem; }
       .taskbar {
-        gap: 16px;
-        padding: 14px 8px;
+        gap: 10px;
+        padding: 10px 0.6rem;
         overflow-x: auto;
         justify-content: flex-start;
       }
       .taskbar a {
-        font-size: 13px;
+        font-size: 11px;
         white-space: nowrap;
+        letter-spacing: 0.05em;
       }
 
       .taskbar-dropdown-trigger {
-        font-size: 13px;
+        font-size: 11px;
         white-space: nowrap;
       }
 
       .taskbar-dropdown-menu {
-        top: calc(100% + 10px);
+        top: calc(100% + 6px);
         left: 0;
-        transform: translateX(0) translateY(8px);
-        min-width: 180px;
+        min-width: 140px;
+        font-size: 11px;
       }
 
-      .taskbar-dropdown:hover .taskbar-dropdown-menu,
-      .taskbar-dropdown:focus-within .taskbar-dropdown-menu,
-      .taskbar-dropdown.open .taskbar-dropdown-menu {
-        transform: translateX(0) translateY(0);
-      }
+      #skills-section { padding: 2.5rem 0.75rem; }
+      .sub-main { font-size: 22px; letter-spacing: 0.03em; }
+      .sub-expertise { font-size: 11px; }
+      .logo-card { width: 66px; height: 66px; border-radius: 14px; padding: 6px; }
+      .logos-row { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+      .logo-label { font-size: 0.7rem; margin-top: 8px; max-width: 90px; }
+      .tooltip { width: 180px; top: calc(100% + 42px); font-size: 0.8rem; }
+      .tooltip-inner { padding: 10px 12px; }
+      .tooltip-name { font-size: 0.82rem; }
+      .tooltip-desc { font-size: 0.7rem; line-height: 1.4; }
 
-      #skills-section { padding: 4.5rem 1.2rem; }
-      .sub-main { font-size: 28px; }
-      .sub-expertise { font-size: 12px; }
-      .logo-card { width: 78px; height: 78px; border-radius: 18px; padding: 8px; }
-      .logos-row { gap: 1.5rem; }
-      .logo-label { font-size: 0.8rem; margin-top: 14px; max-width: 120px; }
-      .tooltip { width: 220px; top: calc(100% + 56px); }
-      .tooltip-inner { padding: 14px 15px; }
-      .tooltip-name { font-size: 0.92rem; }
-      .tooltip-desc { font-size: 0.82rem; }
-      .hover-note { font-size: 0.78rem; margin-top: 1.6rem; }
+      #work-section { padding: 2.5rem 0.75rem 3.5rem; }
+      .work-top { font-size: 11px; }
+      .work-main { font-size: 22px; letter-spacing: 0.03em; }
+      .embedded-work-heading .work-top { font-size: 11px; }
+      .embedded-work-heading .work-main { font-size: 22px; }
+      .work-tabs { gap: 0.5rem; overflow-x: auto; padding-bottom: 0.5rem; }
+      .work-tab { font-size: 0.65rem; padding: 0.5rem 0.7rem; }
+      .work-note { font-size: 0.75rem; }
+      .embedded-work-stack { margin-top: 1.5rem; gap: 1rem; }
+      .embedded-work-card { max-width: 100%; }
 
-      #work-section { padding: 4.2rem 1rem 5.2rem; }
-      .work-top { font-size: 12px; }
-      .work-main { font-size: 28px; }
-      .embedded-work-heading .work-top { font-size: 12px; }
-      .embedded-work-heading .work-main { font-size: 28px; }
-      .work-tabs {
-        justify-content: flex-start;
-      }
-      .work-tab {
-        font-size: 0.74rem;
-      }
-      .work-note { font-size: 0.82rem; }
-      .embedded-work-stack { margin-top: 2rem; gap: 1.4rem; }
-      .embedded-work-card { border-radius: 0; }
+      .commercial-orbit-wrap { max-width: 100%; }
+      .commercial-center-title { font-size: 0.95rem; }
+      .commercial-center-note { font-size: 0.8rem; line-height: 1.5; }
 
-      .commercial-center-title {
-        font-size: 1.02rem;
-      }
-
-      .commercial-center-note {
-        font-size: 0.9rem;
-      }
+      #resume-section { padding: 2.5rem 0.75rem 3.5rem; }
+      #contact-section { padding: 2.5rem 0.75rem 3.5rem; }
     }
 
     /* RESUME SECTION */
@@ -1707,21 +1698,23 @@
     }
 
     @media (max-width: 430px) {
-      body {
-        padding-top: 64px;
-      }
+      html, body { width: 100%; overflow-x: hidden; }
+      body { padding-top: 56px; }
+      * { max-width: 100%; }
 
+      .content { max-width: 100%; padding: 0 0.6rem; margin: 0; }
       .taskbar {
-        gap: 10px;
-        padding-top: 12px;
-        padding-bottom: 12px;
-        padding-left: calc(10px + env(safe-area-inset-left));
-        padding-right: calc(10px + env(safe-area-inset-right));
+        gap: 8px;
+        padding: 8px 0.5rem;
+        padding-left: calc(0.5rem + env(safe-area-inset-left));
+        padding-right: calc(0.5rem + env(safe-area-inset-right));
+        height: auto;
       }
 
       .taskbar a,
       .taskbar-dropdown-trigger {
-        font-size: 12px;
+        font-size: 10px;
+        letter-spacing: 0.02em;
       }
 
       #home-section,
@@ -1730,8 +1723,7 @@
       #work-section,
       #resume-section,
       #contact-section {
-        padding-left: 0.9rem;
-        padding-right: 0.9rem;
+        padding: 2rem 0.6rem;
       }
 
       .work-main,
@@ -1739,41 +1731,108 @@
       .contact-main,
       .resume-main,
       .sub-main {
-        font-size: 24px;
+        font-size: 20px;
+        letter-spacing: 0.02em;
       }
 
       .commercial-orbit-wrap {
-        gap: 0.65rem;
+        gap: 0.5rem;
+        width: 100%;
       }
 
       .commercial-orbit-shot img {
-        max-height: 185px;
+        max-height: 140px;
       }
 
       .photo-bubble-button.commercial-center-button {
-        min-height: 142px;
-        padding: 1rem;
+        min-height: 110px;
+        padding: 0.8rem;
+        border-radius: 20px;
       }
 
       .commercial-center-note {
-        font-size: 0.88rem;
-        line-height: 1.5;
+        font-size: 0.75rem;
+        line-height: 1.3;
       }
 
       .photo-bubble {
-        padding: 0.9rem;
+        padding: 0.6rem;
       }
 
       .photo-bubble-title {
-        font-size: 1.5rem;
+        font-size: 1.2rem;
       }
 
       .photo-bubble-copy {
-        font-size: 0.94rem;
+        font-size: 0.85rem;
+        line-height: 1.4;
       }
 
       .contact-intro {
-        font-size: 1.06rem;
+        font-size: 0.95rem;
+        line-height: 1.6;
+      }
+
+      .contact-ombre-bubble {
+        min-height: auto;
+        padding: 1.5rem 1rem;
+        border-radius: 24px;
+      }
+
+      .contact-item {
+        padding: 0.7rem 0.8rem;
+        gap: 0.8rem;
+      }
+
+      .contact-main,
+      .resume-main {
+        font-size: 20px;
+      }
+
+      .resume-bubble {
+        padding: 1.5rem 1rem;
+        height: auto;
+        min-height: 140px;
+      }
+
+      .resume-job-title {
+        font-size: 15px;
+      }
+
+      .resume-description,
+      .resume-company {
+        font-size: 12px;
+      }
+
+      .logo-card {
+        width: 56px;
+        height: 56px;
+        border-radius: 12px;
+        padding: 4px;
+      }
+
+      .logos-row {
+        gap: 0.8rem;
+      }
+
+      .logo-label {
+        font-size: 0.65rem;
+        margin-top: 6px;
+      }
+
+      .tooltip {
+        width: 150px;
+        top: calc(100% + 32px);
+      }
+
+      .contact-line {
+        font-size: 0.95rem;
+      }
+
+      .linkedin-contact-btn {
+        padding: 12px 24px;
+        font-size: 0.8rem;
+        max-width: 100%;
       }
     }
   </style>
