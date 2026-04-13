@@ -450,7 +450,7 @@
       position: absolute;
       left: var(--x, 50%);
       top: var(--y, 50%);
-      width: clamp(100px, 12vw, 160px);
+      width: clamp(80px, 10vw, 120px);
       aspect-ratio: 4 / 5;
       transform: translate(-50%, -50%);
       border: 1px solid rgba(255,255,255,0.18);
@@ -956,12 +956,12 @@
     const photoCards = document.querySelectorAll(".photo-card");
 
     const photoPositions = [
-      { x: 2, y: 8 },
-      { x: 50, y: 3 },
-      { x: 98, y: 8 },
-      { x: 2, y: 88 },
-      { x: 50, y: 92 },
-      { x: 98, y: 88 }
+      { x: 1, y: 0 },
+      { x: 50, y: 2 },
+      { x: 99, y: 0 },
+      { x: 1, y: 100 },
+      { x: 50, y: 98 },
+      { x: 99, y: 100 }
     ];
 
     const categoryPhotos = {
