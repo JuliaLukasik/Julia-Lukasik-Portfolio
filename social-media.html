@@ -302,6 +302,41 @@
         transform: translateX(0) translateY(0);
       }
     }
+
+    @media (max-width: 430px) {
+      body {
+        padding-top: 64px;
+      }
+
+      .taskbar {
+        gap: 10px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: calc(10px + env(safe-area-inset-left));
+        padding-right: calc(10px + env(safe-area-inset-right));
+      }
+
+      .taskbar a,
+      .taskbar-dropdown-trigger {
+        font-size: 12px;
+      }
+
+      .content {
+        padding: 2.2rem 0.9rem 4rem;
+      }
+
+      .hero-bottom {
+        font-size: clamp(28px, 10vw, 42px);
+      }
+
+      .intro {
+        font-size: 0.96rem;
+      }
+
+      .page-section h2 {
+        font-size: 1.28rem;
+      }
+    }
   </style>
 </head>
 <body>

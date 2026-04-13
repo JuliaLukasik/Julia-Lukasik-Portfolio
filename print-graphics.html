@@ -691,6 +691,62 @@
         animation-duration: 4.8s;
       }
     }
+
+    @media (max-width: 430px) {
+      body {
+        padding-top: 64px;
+      }
+
+      .taskbar {
+        gap: 10px;
+        padding-top: 12px;
+        padding-bottom: 12px;
+        padding-left: calc(10px + env(safe-area-inset-left));
+        padding-right: calc(10px + env(safe-area-inset-right));
+      }
+
+      .taskbar a,
+      .taskbar-dropdown-trigger {
+        font-size: 12px;
+      }
+
+      .content {
+        padding: 2.2rem 0.9rem 4rem;
+      }
+
+      .intro {
+        font-size: 0.96rem;
+      }
+
+      .photo-card img {
+        height: 220px;
+      }
+
+      .lightbox {
+        padding: 0.7rem;
+      }
+
+      .lightbox-panel {
+        padding: 0.8rem;
+        border-radius: 20px;
+      }
+
+      .orbit-photos {
+        grid-template-columns: 1fr;
+      }
+
+      .orbit-center h2 {
+        font-size: 1.22rem;
+      }
+
+      .orbit-center p {
+        font-size: 0.94rem;
+      }
+
+      .commercial-bubble-btn {
+        min-height: 142px;
+      }
+    }
   </style>
 </head>
 <body>
