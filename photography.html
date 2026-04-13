@@ -435,34 +435,33 @@
 
     .orbit-gallery {
       position: relative;
-      min-height: min(72vh, 760px);
+      min-height: min(90vh, 900px);
       border-radius: 20px;
       background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.06), rgba(255,255,255,0.01) 62%);
       overflow: hidden;
-      min-height: min(90vh, 900px);
-      padding: 4rem 3rem;
+      padding: 3.5rem 2.8rem;
     }
 
     .orbit-photos {
-      position: static;
       position: absolute;
-      inset: 0;
+      inset: 2.2rem;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: repeat(2, minmax(0, 1fr));
+      gap: clamp(2.2rem, 4.6vw, 4.8rem);
+      z-index: 1;
     }
 
     .orbit-photo {
-      position: static;
+      position: relative;
       aspect-ratio: 4 / 5;
       border: 1px solid rgba(255,255,255,0.18);
       border-radius: 18px;
       overflow: hidden;
       padding: 0;
       background: rgba(255,255,255,0.06);
-        position: absolute;
-        left: var(--x, 50%);
-        top: var(--y, 50%);
-        width: clamp(80px, 10vw, 120px);
-        transform: translate(-50%, -50%);
-        animation: floaty var(--float-duration, 7s) ease-in-out infinite;
+      width: clamp(92px, 9vw, 128px);
+      transform: none;
       cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-80%25' y='-80%25' width='260%25' height='260%25'><feGaussianBlur in='SourceGraphic' stdDeviation='2.5' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='9' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><circle cx='16' cy='16' r='10' fill='none' stroke='url(%23g)' stroke-width='3'/><line x1='23.5' y1='23.5' x2='36' y2='36' stroke='url(%23g)' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='16' r='5' fill='url(%23g)' opacity='0.2'/></g></svg>") 16 16, zoom-in;
       box-shadow: 0 4px 12px rgba(0,0,0,0.22);
       isolation: isolate;
@@ -470,14 +469,14 @@
     }
 
     .orbit-photo.commercial-large {
-      width: clamp(180px, 24vw, 320px);
+      width: clamp(120px, 14vw, 190px);
       border: 0;
       background: transparent;
       box-shadow: 0 4px 10px rgba(0,0,0,0.18);
     }
 
     .orbit-photo:hover {
-      transform: translate(-50%, -50%) scale(1.04);
+      transform: scale(1.04);
       box-shadow: none;
       z-index: 3;
     }
@@ -487,6 +486,7 @@
       height: 100%;
       object-fit: contain;
       background: rgba(8, 7, 16, 0.7);
+      animation: floatySoft var(--float-duration, 7s) ease-in-out infinite;
     }
 
     .orbit-photo.commercial-large img {
@@ -541,7 +541,7 @@
       left: 50%;
       top: 50%;
       transform: translate(-50%, -50%);
-      width: min(440px, 80%);
+      width: min(360px, 66%);
       padding: 1.5rem 1.4rem;
       border-radius: 18px;
       border: 1px solid rgba(255,255,255,0.18);
@@ -590,10 +590,10 @@
       background: rgba(255,255,255,0.2);
     }
 
-    @keyframes floaty {
-      0% { transform: translate(-50%, -50%) translateY(0); }
-      50% { transform: translate(-50%, -50%) translateY(-8px); }
-      100% { transform: translate(-50%, -50%) translateY(0); }
+    @keyframes floatySoft {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
     }
 
     @keyframes commercialFloat {
