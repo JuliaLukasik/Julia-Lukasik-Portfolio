@@ -1024,6 +1024,35 @@
     .commercial-orbit-shot.s5 { --shot-x: 27%; --shot-y: 82%; animation-delay: 2s; }
     .commercial-orbit-shot.s6 { --shot-x: 73%; --shot-y: 82%; animation-delay: 2.5s; }
 
+    .commercial-orbit-wrap.print-template-orbit .commercial-center-button {
+      width: min(390px, 84%);
+      min-height: 176px;
+    }
+
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot {
+      width: clamp(124px, 10.8vw, 158px);
+      height: clamp(156px, 13.8vw, 198px);
+    }
+
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s1 { --shot-x: 20%; --shot-y: 17%; }
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s2 { --shot-x: 80%; --shot-y: 17%; }
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s3 { --shot-x: 11%; --shot-y: 52%; }
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s4 { --shot-x: 89%; --shot-y: 50%; }
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s5 { --shot-x: 20%; --shot-y: 83%; }
+    .commercial-orbit-wrap.print-template-orbit .commercial-orbit-shot.s6 { --shot-x: 80%; --shot-y: 83%; }
+
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot {
+      width: clamp(122px, 10.5vw, 156px);
+      height: clamp(154px, 13.4vw, 196px);
+    }
+
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s1 { --shot-x: 18%; --shot-y: 16%; }
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s2 { --shot-x: 82%; --shot-y: 16%; }
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s3 { --shot-x: 8%; --shot-y: 50%; }
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s4 { --shot-x: 92%; --shot-y: 50%; }
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s5 { --shot-x: 18%; --shot-y: 84%; }
+    .commercial-orbit-wrap.sport-graphics-orbit .commercial-orbit-shot.s6 { --shot-x: 82%; --shot-y: 84%; }
+
     .campaign-orbit-four .commercial-orbit-shot.s1 { --shot-x: 18%; --shot-y: 24%; }
     .campaign-orbit-four .commercial-orbit-shot.s2 { --shot-x: 82%; --shot-y: 24%; }
     .campaign-orbit-four .commercial-orbit-shot.s3 { --shot-x: 18%; --shot-y: 76%; }
@@ -1227,8 +1256,9 @@
       .taskbar {
         gap: 10px;
         padding: 10px 0.6rem;
-        overflow-x: auto;
-        justify-content: flex-start;
+        overflow-x: hidden;
+        justify-content: center;
+        flex-wrap: wrap;
       }
       .taskbar a {
         font-size: 11px;
@@ -1947,6 +1977,13 @@
         max-width: 100%;
       }
     }
+
+    @media (max-width: 900px) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -2264,7 +2301,7 @@
           <div class="work-top">Creative Portfolio</div>
           <div class="work-main">Graphics</div>
         </div>
-        <div class="commercial-orbit-wrap" aria-label="Print and template graphics highlight">
+        <div class="commercial-orbit-wrap print-template-orbit" aria-label="Print and template graphics highlight">
           <button class="commercial-orbit-shot s1" type="button" aria-label="Open print graphic one">
             <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-582c42e2-967b-409c-ad6b-adaa3da58d6f.jpg" alt="Print graphic one">
           </button>
@@ -2272,10 +2309,10 @@
             <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-607eb387-d717-4eef-aa0c-b3eefc86d639.jpg" alt="Print graphic two">
           </button>
           <button class="commercial-orbit-shot s3" type="button" aria-label="Open print graphic three">
-            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-b806c223-cacd-4bc3-9779-5b9c1a6ad96a.jpg" alt="Print graphic three">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7cb73d45-c6f9-4d94-8506-7fb44baf9709.jpg" alt="Print graphic three">
           </button>
           <button class="commercial-orbit-shot s4" type="button" aria-label="Open print graphic four">
-            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-7cb73d45-c6f9-4d94-8506-7fb44baf9709.jpg" alt="Print graphic four">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-b806c223-cacd-4bc3-9779-5b9c1a6ad96a.jpg" alt="Print graphic four">
           </button>
           <button class="commercial-orbit-shot s5" type="button" aria-label="Open print graphic five">
             <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-f5220752-c559-4075-9410-5beb2cd83eed.jpg" alt="Print graphic five">
@@ -2337,7 +2374,7 @@
           </button>
         </div>
 
-        <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Sport graphics highlight">
+        <div class="commercial-orbit-wrap photo-orbit-group sport-graphics-orbit" aria-label="Sport graphics highlight">
           <button class="commercial-orbit-shot s1" type="button" aria-label="Open sport graphic one">
             <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-56ed0cec-ee14-46fe-a87d-9837c25d27ec.jpg" alt="Sport graphic one">
           </button>
@@ -2484,11 +2521,17 @@
   </div>
 
   <script>
+    const disableMotionMobile = window.matchMedia("(max-width: 900px)").matches;
+
     /* ---------------------------
        SETUP
     ---------------------------- */
     const canvas = document.getElementById("galaxyCanvas");
     const ctx = canvas.getContext("2d");
+
+    if (disableMotionMobile && canvas) {
+      canvas.style.display = "none";
+    }
 
     function resize() {
       canvas.width = window.innerWidth;
@@ -2533,16 +2576,18 @@
       });
     }
 
-    setInterval(() => {
-      if (contactSectionActive) {
-        const burstCount = 2 + Math.floor(Math.random() * 3);
-        for (let i = 0; i < burstCount; i++) {
-          if (Math.random() < 0.9) createShootingStar();
+    if (!disableMotionMobile) {
+      setInterval(() => {
+        if (contactSectionActive) {
+          const burstCount = 2 + Math.floor(Math.random() * 3);
+          for (let i = 0; i < burstCount; i++) {
+            if (Math.random() < 0.9) createShootingStar();
+          }
+        } else if (Math.random() < 0.2) {
+          createShootingStar();
         }
-      } else if (Math.random() < 0.2) {
-        createShootingStar();
-      }
-    }, 900);
+      }, 900);
+    }
 
     /* ---------------------------
        ANIMATION LOOP
@@ -2648,7 +2693,9 @@
       requestAnimationFrame(animate);
     }
 
-    animate();
+    if (!disableMotionMobile) {
+      animate();
+    }
 
     const contactSection = document.getElementById("contact-section");
     if (contactSection) {
@@ -2775,7 +2822,9 @@
       });
       requestAnimationFrame(animateButtons);
     }
-    animateButtons();
+    if (!disableMotionMobile) {
+      animateButtons();
+    }
 
     const connectBtn = document.getElementById("connectBtn");
     if (connectBtn) {
@@ -2816,6 +2865,8 @@
        FULL PAGE FLOATING ICONS
     ---------------------------- */
     (function() {
+      if (disableMotionMobile) return;
+
       const orbitContainer = document.getElementById("full-page-orbit");
       const aboutSection = document.getElementById("about-section");
       if (!orbitContainer || !aboutSection) return;
@@ -2892,6 +2943,13 @@
     (function() {
       const orbitGroups = document.querySelectorAll(".embedded-work-block .commercial-orbit-wrap");
       if (!orbitGroups.length) return;
+
+      if (disableMotionMobile) {
+        orbitGroups.forEach((group) => {
+          group.classList.remove("is-collapsed");
+        });
+        return;
+      }
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {

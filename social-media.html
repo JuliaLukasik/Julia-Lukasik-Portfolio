@@ -331,6 +331,13 @@
         font-size: 0.85rem;
       }
     }
+
+    @media (max-width: 900px) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 <body>
@@ -374,8 +381,14 @@
   </main>
 
   <script>
+    const disableMotionMobile = window.matchMedia("(max-width: 900px)").matches;
+
     const canvas = document.getElementById("galaxyCanvas");
     const ctx = canvas.getContext("2d");
+
+    if (disableMotionMobile && canvas) {
+      canvas.style.display = "none";
+    }
 
     function resizeCanvas() {
       canvas.width = window.innerWidth;
@@ -434,7 +447,9 @@
       requestAnimationFrame(drawGalaxy);
     }
 
-    drawGalaxy();
+    if (!disableMotionMobile) {
+      drawGalaxy();
+    }
 
     (function() {
       const dropdown = document.getElementById("workDropdown");
