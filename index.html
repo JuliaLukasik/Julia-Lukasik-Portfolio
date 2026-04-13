@@ -1237,11 +1237,30 @@
     }
 
     @media (max-width: 900px) {
+      body { padding-top: 0; }
+      .taskbar { display: none; }
       .sub-main { font-size: 34px; }
       .sub-expertise { font-size: 14px; }
       .scroll-indicator { display: none; }
       .logo-card { width: 94px; height: 94px; border-radius: 20px; }
+      .portfolio-heading {
+        width: 100%;
+        margin-bottom: 0.6rem;
+        text-align: center;
+        align-items: center;
+      }
+      .portfolio-top {
+        font-size: 14px;
+        font-weight: 500;
+        letter-spacing: 0.18em;
+      }
+      .portfolio-bottom {
+        font-size: 34px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+      }
       .logos-row {
+        order: 2;
         gap: 1.2rem;
         align-items: stretch;
       }
@@ -1267,8 +1286,10 @@
       }
       .skills-mobile-panel {
         display: block;
+        order: 1;
         width: min(720px, 100%);
-        margin-top: 2rem;
+        margin-top: 0;
+        margin-bottom: 2rem;
         --skills-brand: #9999FF;
       }
 
@@ -1307,6 +1328,11 @@
         grid-area: center;
         grid-column: 1 / -1;
         order: -1;
+      }
+
+      .commercial-orbit-wrap.print-template-orbit .commercial-center-button {
+        width: 100%;
+        min-height: 158px;
       }
 
       .commercial-orbit-shot {
@@ -1436,6 +1462,8 @@
       #skills-section { padding: 2.5rem 0.75rem; }
       .sub-main { font-size: 22px; letter-spacing: 0.03em; }
       .sub-expertise { font-size: 11px; }
+      .portfolio-top { font-size: 11px; }
+      .portfolio-bottom { font-size: 22px; letter-spacing: 0.03em; }
       .logo-card { width: 66px; height: 66px; border-radius: 14px; padding: 6px; }
       .logos-row { gap: 1rem; flex-wrap: wrap; justify-content: center; }
       .logo-item {
@@ -1448,6 +1476,9 @@
         justify-items: center;
         text-align: center;
         padding: 1.25rem;
+      }
+      .skills-mobile-panel {
+        margin-bottom: 1.5rem;
       }
       .skills-mobile-copy {
         text-align: center;
@@ -1623,13 +1654,41 @@
     }
 
     @media (max-width: 900px) {
-      .resume-bubbles { grid-template-columns: 1fr; }
-      .resume-bubble-wrapper { width: 90vw; height: 300px; }
-      .resume-bubble { width: 90vw; height: 300px; position: relative; top: unset; left: unset; transform: none; }
+      .resume-bubbles {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .resume-bubble-wrapper {
+        width: min(90vw, 640px);
+        height: auto;
+      }
+      .resume-bubble {
+        width: 100%;
+        height: auto;
+        min-height: 260px;
+        position: relative;
+        top: unset;
+        left: unset;
+        transform: none;
+      }
+      #rbw-5 {
+        max-width: min(90vw, 640px);
+        width: min(90vw, 640px);
+      }
     }
 
     @media (max-width: 600px) {
       #resume-section { padding: 4rem 1rem 5rem; }
+      .resume-bubbles { gap: 0.85rem; }
+      .resume-bubble-wrapper,
+      #rbw-5 {
+        width: 100%;
+        max-width: 100%;
+      }
+      .resume-bubble {
+        min-height: 0;
+        padding: 1.35rem 1.15rem;
+      }
       .resume-main { font-size: 30px; }
       .resume-top { font-size: 14px; }
       .resume-job-title { font-size: 17px; }
@@ -1990,6 +2049,16 @@
         letter-spacing: 0.02em;
       }
 
+      .portfolio-top {
+        font-size: 10px;
+        letter-spacing: 0.14em;
+      }
+
+      .portfolio-bottom {
+        font-size: 20px;
+        letter-spacing: 0.02em;
+      }
+
       .commercial-orbit-wrap {
         gap: 0.5rem;
         width: 100%;
@@ -2003,6 +2072,10 @@
         min-height: 110px;
         padding: 0.8rem;
         border-radius: 20px;
+      }
+
+      .commercial-orbit-wrap.print-template-orbit .commercial-center-button {
+        width: 100%;
       }
 
       .commercial-center-note {
@@ -2081,7 +2154,8 @@
       }
 
       .skills-mobile-panel {
-        margin-top: 1.35rem;
+        margin-top: 0;
+        margin-bottom: 1.1rem;
       }
 
       .skills-mobile-card {
