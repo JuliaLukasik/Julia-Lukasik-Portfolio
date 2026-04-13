@@ -675,6 +675,12 @@
       transition: transform 0.25s cubic-bezier(.34,1.56,.64,1), border-color 0.3s, box-shadow 0.3s;
     }
 
+    .logo-card svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
     .logo-item:hover .logo-card {
       transform: scale(1.12);
       border-color: rgba(255,255,255,0.28);
@@ -764,6 +770,68 @@
       opacity: 1;
       transform: translateX(-50%) translateY(0);
       pointer-events: auto;
+    }
+
+    .skills-mobile-panel {
+      display: none;
+    }
+
+    .skills-mobile-card {
+      border-radius: 30px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: linear-gradient(145deg, rgba(13,10,28,0.88), rgba(24,18,42,0.84));
+      box-shadow:
+        inset 0 0 22px rgba(255,255,255,0.08),
+        0 22px 44px rgba(0,0,0,0.34);
+      backdrop-filter: blur(20px);
+      padding: 1.6rem;
+      display: grid;
+      grid-template-columns: minmax(140px, 180px) minmax(0, 1fr);
+      gap: 1.3rem;
+      align-items: center;
+    }
+
+    .skills-mobile-visual {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .skills-mobile-visual .logo-card {
+      width: clamp(120px, 18vw, 168px);
+      height: clamp(120px, 18vw, 168px);
+      border-radius: 30px;
+      padding: 14px;
+      border-color: color-mix(in srgb, var(--skills-brand, #ffffff) 42%, rgba(255,255,255,0.16));
+      box-shadow:
+        0 0 0 1px color-mix(in srgb, var(--skills-brand, #ffffff) 24%, transparent 76%),
+        0 18px 38px color-mix(in srgb, var(--skills-brand, #ffffff) 20%, rgba(0,0,0,0.28));
+    }
+
+    .skills-mobile-copy {
+      min-width: 0;
+      text-align: left;
+    }
+
+    .skills-mobile-name {
+      font-family: Inter, sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--skills-brand, #ffffff);
+    }
+
+    .skills-mobile-divider {
+      height: 1px;
+      margin: 0.85rem 0 1rem;
+      background: linear-gradient(90deg, color-mix(in srgb, var(--skills-brand, #ffffff) 90%, transparent 10%), transparent);
+      opacity: 0.7;
+    }
+
+    .skills-mobile-desc {
+      font-size: 0.98rem;
+      line-height: 1.7;
+      color: rgba(233, 226, 255, 0.84);
     }
 
     @keyframes float1 { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
@@ -996,7 +1064,7 @@
       box-shadow: none;
       z-index: 2;
       padding: 0;
-      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-80%25' y='-80%25' width='260%25' height='260%25'><feGaussianBlur in='SourceGraphic' stdDeviation='2.5' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='5' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='9' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><circle cx='16' cy='16' r='10' fill='none' stroke='url(%23g)' stroke-width='3'/><line x1='23.5' y1='23.5' x2='36' y2='36' stroke='url(%23g)' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='16' r='5' fill='url(%23g)' opacity='0.2'/></g></svg>") 16 16, zoom-in;
+      cursor: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><defs><linearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'><stop offset='0%25' stop-color='%23ffffff'/><stop offset='25%25' stop-color='%23dbeafe'/><stop offset='55%25' stop-color='%23a5b4fc'/><stop offset='75%25' stop-color='%23c084fc'/><stop offset='100%25' stop-color='%23f9a8d4'/></linearGradient><filter id='glow' x='-60%25' y='-60%25' width='220%25' height='220%25'><feGaussianBlur in='SourceGraphic' stdDeviation='1.1' result='blur1'/><feGaussianBlur in='SourceGraphic' stdDeviation='2.4' result='blur2'/><feGaussianBlur in='SourceGraphic' stdDeviation='4.2' result='blur3'/><feMerge><feMergeNode in='blur3'/><feMergeNode in='blur2'/><feMergeNode in='blur1'/><feMergeNode in='SourceGraphic'/></feMerge></filter></defs><g filter='url(%23glow)'><circle cx='16' cy='16' r='10' fill='none' stroke='url(%23g)' stroke-width='3'/><line x1='23.5' y1='23.5' x2='36' y2='36' stroke='url(%23g)' stroke-width='3' stroke-linecap='round'/><circle cx='16' cy='16' r='5' fill='url(%23g)' opacity='0.14'/></g></svg>") 16 16, zoom-in;
       opacity: 1;
       transition: left 0.58s cubic-bezier(0.22, 1, 0.36, 1), top 0.58s cubic-bezier(0.22, 1, 0.36, 1), transform 0.58s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.38s ease, filter 0.2s ease;
     }
@@ -1171,9 +1239,38 @@
     @media (max-width: 900px) {
       .sub-main { font-size: 34px; }
       .sub-expertise { font-size: 14px; }
+      .scroll-indicator { display: none; }
       .logo-card { width: 94px; height: 94px; border-radius: 20px; }
-      .logos-row { gap: 2.1rem; }
-      .tooltip { width: 270px; top: calc(100% + 60px); }
+      .logos-row {
+        gap: 1.2rem;
+        align-items: stretch;
+      }
+      .logo-item {
+        flex: 0 1 calc(25% - 1rem);
+        min-width: 90px;
+      }
+      .logo-item:hover .logo-card {
+        transform: none;
+      }
+      .logo-item.is-selected-mobile .logo-card {
+        border-color: color-mix(in srgb, var(--brand) 50%, rgba(255,255,255,0.16));
+        box-shadow:
+          0 0 0 1px color-mix(in srgb, var(--brand) 24%, transparent 76%),
+          0 18px 34px color-mix(in srgb, var(--brand) 18%, rgba(0,0,0,0.3));
+      }
+      .logo-item.is-selected-mobile .logo-label {
+        color: var(--brand);
+        text-shadow: none;
+      }
+      .tooltip {
+        display: none;
+      }
+      .skills-mobile-panel {
+        display: block;
+        width: min(720px, 100%);
+        margin-top: 2rem;
+        --skills-brand: #9999FF;
+      }
 
       .work-main { font-size: 34px; }
       .work-tabs { justify-content: center; }
@@ -1341,11 +1438,27 @@
       .sub-expertise { font-size: 11px; }
       .logo-card { width: 66px; height: 66px; border-radius: 14px; padding: 6px; }
       .logos-row { gap: 1rem; flex-wrap: wrap; justify-content: center; }
+      .logo-item {
+        flex: 0 1 calc(25% - 0.75rem);
+        min-width: 64px;
+      }
       .logo-label { font-size: 0.7rem; margin-top: 8px; max-width: 90px; }
-      .tooltip { width: 180px; top: calc(100% + 42px); font-size: 0.8rem; }
-      .tooltip-inner { padding: 10px 12px; }
-      .tooltip-name { font-size: 0.82rem; }
-      .tooltip-desc { font-size: 0.7rem; line-height: 1.4; }
+      .skills-mobile-card {
+        grid-template-columns: 1fr;
+        justify-items: center;
+        text-align: center;
+        padding: 1.25rem;
+      }
+      .skills-mobile-copy {
+        text-align: center;
+      }
+      .skills-mobile-name {
+        font-size: 1.1rem;
+      }
+      .skills-mobile-desc {
+        font-size: 0.86rem;
+        line-height: 1.55;
+      }
 
       #work-section { padding: 2.5rem 0.75rem 3.5rem; }
       .work-top { font-size: 11px; }
@@ -1957,14 +2070,43 @@
         gap: 0.8rem;
       }
 
+      .logo-item {
+        flex: 0 1 calc(25% - 0.6rem);
+        min-width: 58px;
+      }
+
       .logo-label {
         font-size: 0.65rem;
         margin-top: 6px;
       }
 
-      .tooltip {
-        width: 150px;
-        top: calc(100% + 32px);
+      .skills-mobile-panel {
+        margin-top: 1.35rem;
+      }
+
+      .skills-mobile-card {
+        border-radius: 24px;
+        padding: 1rem 0.9rem;
+      }
+
+      .skills-mobile-visual .logo-card {
+        width: 96px;
+        height: 96px;
+        border-radius: 24px;
+        padding: 10px;
+      }
+
+      .skills-mobile-name {
+        font-size: 1rem;
+      }
+
+      .skills-mobile-divider {
+        margin: 0.7rem 0 0.85rem;
+      }
+
+      .skills-mobile-desc {
+        font-size: 0.8rem;
+        line-height: 1.5;
       }
 
       .contact-line {
@@ -1979,9 +2121,44 @@
     }
 
     @media (max-width: 900px) {
-      *, *::before, *::after {
+      .taskbar a,
+      .taskbar-dropdown-trigger,
+      .hero-bottom,
+      .hero-headshot-wrapper::after,
+      .portfolio-top,
+      .sub-expertise,
+      .work-top,
+      .resume-top,
+      .contact-top,
+      .resume-job-title,
+      .scroll-arrow,
+      .floater,
+      .commercial-orbit-shot img,
+      .contact-ombre-bubble::before {
         animation: none !important;
+      }
+
+      .magic-btn,
+      .logo-card,
+      .photo-bubble-button,
+      .linkedin-contact-btn,
+      .commercial-orbit-shot,
+      .resume-bubble,
+      .contact-item,
+      .taskbar-dropdown-menu,
+      .taskbar a,
+      .taskbar-dropdown-trigger,
+      .hero-headshot,
+      .hero-headshot-wrapper::after,
+      .work-tab,
+      .tooltip,
+      .logo-label {
         transition: none !important;
+      }
+
+      #full-page-orbit,
+      .orbit-icon {
+        display: none !important;
       }
     }
   </style>
@@ -2209,6 +2386,20 @@
           </div>
         </div>
         <div class="logo-label">GitHub</div>
+      </div>
+    </div>
+    <div class="skills-mobile-panel" id="skillsMobilePanel" aria-live="polite">
+      <div class="skills-mobile-card">
+        <div class="skills-mobile-visual" id="skillsMobileVisual">
+          <div class="logo-card">
+            <svg viewBox="0 0 100 100"><rect width="100" height="100" rx="18" fill="#9999FF"/><text x="50" y="68" text-anchor="middle" font-size="44" font-weight="700" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" fill="#00001A">Pr</text></svg>
+          </div>
+        </div>
+        <div class="skills-mobile-copy">
+          <div class="skills-mobile-name" id="skillsMobileName">Adobe Premiere Pro</div>
+          <div class="skills-mobile-divider"></div>
+          <div class="skills-mobile-desc" id="skillsMobileDesc">Basic video editing skills, transitions, colour correction and timeline management.</div>
+        </div>
       </div>
     </div>
   </section>
@@ -2529,10 +2720,6 @@
     const canvas = document.getElementById("galaxyCanvas");
     const ctx = canvas.getContext("2d");
 
-    if (disableMotionMobile && canvas) {
-      canvas.style.display = "none";
-    }
-
     function resize() {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
@@ -2543,17 +2730,18 @@
     /* ---------------------------
        STAR FIELD
     ---------------------------- */
-    const numStars = 400;
+    const numStars = disableMotionMobile ? 170 : 400;
     const stars = [];
 
     for (let i = 0; i < numStars; i++) {
+      const driftRange = disableMotionMobile ? 0.08 : 0.15;
       stars.push({
         x: Math.random() * canvas.width,
         y: Math.random() * canvas.height,
         z: Math.random() * 1000,
         size: Math.random() * 2,
-        speedX: (Math.random() - 0.5) * 0.15,
-        speedY: (Math.random() - 0.5) * 0.15
+        speedX: (Math.random() - 0.5) * driftRange,
+        speedY: (Math.random() - 0.5) * driftRange
       });
     }
 
@@ -2693,9 +2881,7 @@
       requestAnimationFrame(animate);
     }
 
-    if (!disableMotionMobile) {
-      animate();
-    }
+    animate();
 
     const contactSection = document.getElementById("contact-section");
     if (contactSection) {
@@ -3026,41 +3212,102 @@
       });
     }
 
-    // Skills tooltips: enable click/tap and keyboard support beyond hover.
+    // Skills: desktop keeps tooltips, mobile swaps to a static detail card.
     (function() {
-      const skillItems = document.querySelectorAll("#skills-section .logo-item");
+      const skillItems = Array.from(document.querySelectorAll("#skills-section .logo-item"));
+      const mobileViewQuery = window.matchMedia("(max-width: 900px)");
+      const mobilePanel = document.getElementById("skillsMobilePanel");
+      const mobileVisual = document.getElementById("skillsMobileVisual");
+      const mobileName = document.getElementById("skillsMobileName");
+      const mobileDesc = document.getElementById("skillsMobileDesc");
+
+      if (!skillItems.length) return;
 
       function closeAll() {
-        skillItems.forEach(item => item.classList.remove("is-open"));
+        skillItems.forEach((item) => {
+          item.classList.remove("is-open");
+          item.classList.remove("is-selected-mobile");
+          item.setAttribute("aria-expanded", "false");
+        });
       }
 
-      skillItems.forEach(item => {
+      function showMobileDetails(item) {
+        if (!mobilePanel || !mobileVisual || !mobileName || !mobileDesc) return;
+        const brand = item.style.getPropertyValue("--brand") || "#ffffff";
+        const card = item.querySelector(".logo-card");
+        const name = item.querySelector(".tooltip-name");
+        const desc = item.querySelector(".tooltip-desc");
+
+        closeAll();
+        item.classList.add("is-selected-mobile");
+        item.setAttribute("aria-expanded", "true");
+        mobilePanel.style.setProperty("--skills-brand", brand.trim() || "#ffffff");
+        mobileVisual.innerHTML = card ? `<div class="logo-card">${card.innerHTML}</div>` : "";
+        mobileName.textContent = name ? name.textContent.trim() : "";
+        mobileDesc.textContent = desc ? desc.textContent.trim() : "";
+      }
+
+      function toggleDesktopTooltip(item) {
+        const willOpen = !item.classList.contains("is-open");
+        closeAll();
+        if (willOpen) {
+          item.classList.add("is-open");
+          item.setAttribute("aria-expanded", "true");
+        }
+      }
+
+      function syncForViewport(item) {
+        if (mobileViewQuery.matches) {
+          showMobileDetails(item);
+          return;
+        }
+
+        toggleDesktopTooltip(item);
+      }
+
+      skillItems.forEach((item) => {
+        item.setAttribute("aria-expanded", "false");
+
         item.addEventListener("click", (event) => {
-          const willOpen = !item.classList.contains("is-open");
-          closeAll();
-          if (willOpen) item.classList.add("is-open");
+          syncForViewport(item);
           event.stopPropagation();
         });
 
         item.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
-            const willOpen = !item.classList.contains("is-open");
-            closeAll();
-            if (willOpen) item.classList.add("is-open");
+            syncForViewport(item);
           }
+
           if (event.key === "Escape") {
-            item.classList.remove("is-open");
+            closeAll();
             item.blur();
           }
         });
       });
 
       document.addEventListener("click", (event) => {
-        if (!event.target.closest("#skills-section .logo-item")) {
+        if (!mobileViewQuery.matches && !event.target.closest("#skills-section .logo-item")) {
           closeAll();
         }
       });
+
+      if (mobileViewQuery.matches) {
+        showMobileDetails(skillItems[0]);
+      }
+
+      const handleViewportChange = (event) => {
+          closeAll();
+          if (event.matches) {
+            showMobileDetails(skillItems[0]);
+          }
+      };
+
+      if (typeof mobileViewQuery.addEventListener === "function") {
+        mobileViewQuery.addEventListener("change", handleViewportChange);
+      } else if (typeof mobileViewQuery.addListener === "function") {
+        mobileViewQuery.addListener(handleViewportChange);
+      }
     })();
 
 
