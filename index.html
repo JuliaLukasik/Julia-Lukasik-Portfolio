@@ -1004,6 +1004,9 @@
       margin-top: 8rem;
     }
 
+    .headshot-orbit .commercial-orbit-shot.s1 { --shot-x: 18%; --shot-y: 50%; }
+    .headshot-orbit .commercial-orbit-shot.s2 { --shot-x: 82%; --shot-y: 50%; }
+
     .commercial-orbit-shot {
       position: absolute;
       left: var(--shot-x, 50%);
@@ -1554,16 +1557,6 @@
       justify-content: center;
     }
 
-    #rbw-5 {
-      grid-column: 1 / -1;
-      justify-self: center;
-      max-width: 560px;
-    }
-
-    #rbw-5 .resume-bubble {
-      text-align: center;
-    }
-
     .resume-job-title {
       font-size: 20px;
       font-weight: 700;
@@ -1624,17 +1617,12 @@
         left: unset;
         transform: none;
       }
-      #rbw-5 {
-        max-width: min(90vw, 640px);
-        width: min(90vw, 640px);
-      }
     }
 
     @media (max-width: 600px) {
       #resume-section { padding: 4rem 1rem 5rem; }
       .resume-bubbles { gap: 0.85rem; }
-      .resume-bubble-wrapper,
-      #rbw-5 {
+      .resume-bubble-wrapper {
         width: 100%;
         max-width: 100%;
       }
@@ -2488,6 +2476,20 @@
           </button>
         </div>
 
+        <div class="commercial-orbit-wrap photo-orbit-group headshot-orbit" aria-label="Headshot photography highlight">
+          <button class="commercial-orbit-shot s1" type="button" aria-label="Open headshot photo one">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-36604237-e611-440b-a03e-a0ecc03e07e4.png" alt="Headshot photography portrait one">
+          </button>
+          <button class="commercial-orbit-shot s2" type="button" aria-label="Open headshot photo two">
+            <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-d03af37e-3315-41b2-a893-8198598ba0de.png" alt="Headshot photography portrait two">
+          </button>
+
+          <button class="photo-bubble-button commercial-center-button" type="button">
+            <span class="commercial-center-title">Headshot Photography</span>
+            <span class="commercial-center-note">This collection features headshots created for an individual client, showcasing intentional lighting, composition, and brand-aligned presentation.</span>
+          </button>
+        </div>
+
         <div class="commercial-orbit-wrap photo-orbit-group" aria-label="Sports photography highlight">
           <button class="commercial-orbit-shot s1" type="button" aria-label="Open sports photo one">
             <img src="https://i-p.rmcdn.net/699247e28021814bdc08539a/6182264/image-92d47422-1003-4dea-8dc2-6c01683f3f41.png" alt="Sports photo one">
@@ -2639,14 +2641,23 @@
       <!-- Bubble 1 -->
       <div class="resume-bubble-wrapper" id="rbw-1">
         <div class="resume-bubble">
+          <div class="resume-job-title">JL Creative Services LLC &mdash; Creative Services &amp; Business Owner</div>
+          <div class="resume-company">JL Creative Services LLC &bull; 2024 &ndash; Present</div>
+          <div class="resume-description">Provide graphic design, photography, headshot photography, branding, and creative materials including logos, posters, contact sheets, sales pitch presentations, and promotional assets for clients.</div>
+        </div>
+      </div>
+
+      <!-- Bubble 2 -->
+      <div class="resume-bubble-wrapper" id="rbw-2">
+        <div class="resume-bubble">
           <div class="resume-job-title">Marketing Intern</div>
           <div class="resume-company">Boldt Construction, Appleton, WI &bull; May 2024 &ndash; Aug 2025</div>
           <div class="resume-description">Worked in Adobe Creative Cloud and Microsoft Suite to create branded social, email, print, and photography content, collaborated across teams, and contributed fresh ideas for upcoming marketing initiatives.</div>
         </div>
       </div>
 
-      <!-- Bubble 2 -->
-      <div class="resume-bubble-wrapper" id="rbw-2">
+      <!-- Bubble 3 -->
+      <div class="resume-bubble-wrapper" id="rbw-3">
         <div class="resume-bubble">
           <div class="resume-job-title">Proposals/Graphics Intern</div>
           <div class="resume-company">Kiewit Construction, Lone Tree, CO &bull; Jun 2023 &ndash; Jul 2023</div>
@@ -2654,8 +2665,8 @@
         </div>
       </div>
 
-      <!-- Bubble 3 -->
-      <div class="resume-bubble-wrapper" id="rbw-3">
+      <!-- Bubble 4 -->
+      <div class="resume-bubble-wrapper" id="rbw-4">
         <div class="resume-bubble">
           <div class="resume-job-title">Volleyball Coach</div>
           <div class="resume-company">Shorewood School District, Milwaukee, WI &bull; Aug 2023 &ndash; Dec 2025</div>
@@ -2663,8 +2674,8 @@
         </div>
       </div>
 
-      <!-- Bubble 4 -->
-      <div class="resume-bubble-wrapper" id="rbw-4">
+      <!-- Bubble 5 -->
+      <div class="resume-bubble-wrapper" id="rbw-5">
         <div class="resume-bubble">
           <div class="resume-job-title">Social Media &amp; Photography Volunteer</div>
           <div class="resume-company">Menasha Macs Baseball Organization, Menasha, WI &bull; May 2025 &ndash; Sep 2025</div>
@@ -2672,8 +2683,8 @@
         </div>
       </div>
 
-      <!-- Bubble 5 -->
-      <div class="resume-bubble-wrapper" id="rbw-5">
+      <!-- Bubble 6 -->
+      <div class="resume-bubble-wrapper" id="rbw-6">
         <div class="resume-bubble">
           <div class="resume-job-title">TikTok Shop Research &amp; UGC Study</div>
           <div class="resume-company">TikTok Shop Affiliate Program, Independent Research &bull; Oct 2025 &ndash; Present</div>
